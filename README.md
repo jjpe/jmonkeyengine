@@ -35,4 +35,5 @@ Go to the `Libraries` tab.
 Locate and select `android`.    
 Click `remove`.
 
-
+### Plugins
+*TPTP* for generating UML sequence diagrams from Java code
