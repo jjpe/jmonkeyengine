@@ -35,5 +35,25 @@ Go to the `Libraries` tab.
 Locate and select `android`.    
 Click `remove`.
 
-### Plugins
-*TPTP* for generating UML sequence diagrams from Java code
+### Flippendo...eh... Fluendo!
+In `src/jheora` there are a bunch of references to some `come.fluendo` package which is not included in the lib folder.
+The `src/jheora` sub-project seems unused in the `build.xml` files, so I'm guessing this is deprecated or something.
+
+Anyway, let's just remove it:    
+Go to `Properties -> Java Build Path`.    
+Locate and select `<your-project-name>/src/jheora` in the list of source folders.    
+Click `remove`.    
+
+# Installation of tools in Eclipse
+## PMD
+http://marketplace.eclipse.org/content/pmd-eclipse?mpc=true&mpc_state=
+## FindBugs
+http://marketplace.eclipse.org/content/findbugs-eclipse-plugin
+## Sonar
+http://marketplace.eclipse.org/content/sonar
+## Metrics
+http://marketplace.eclipse.org/content/eclipse-metrics
+## Clover
+http://marketplace.eclipse.org/content/atlassian-clover-eclipse
+## TPTP
+Generates UML sequence diagrams from Java source code
