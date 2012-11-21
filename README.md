@@ -43,3 +43,15 @@ Anyway, let's just remove it:
 Go to `Properties -> Java Build Path`.    
 Locate and select `<your-project-name>/src/jheora` in the list of source folders.    
 Click `remove`.    
+
+# Installation of tools in Eclipse
+## PMD
+http://marketplace.eclipse.org/content/pmd-eclipse?mpc=true&mpc_state=
+## FindBugs
+http://marketplace.eclipse.org/content/findbugs-eclipse-plugin
+## Sonar
+http://marketplace.eclipse.org/content/sonar
+## Metrics
+http://marketplace.eclipse.org/content/eclipse-metrics
+## Clover
+http://marketplace.eclipse.org/content/atlassian-clover-eclipse
