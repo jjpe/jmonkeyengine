@@ -1,0 +1,154 @@
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
+\documentclass[a4paper, 10pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+
+\usepackage[backend=bibtex]{biblatex}
+\addbibresource{references.bib}
+
+\title{Software Reengineering\\
+       Assignment 1}
+\author{Joey Ezechiels (1338994) \and Volker Lanting (1513273)}
+
+% % Implement x.yy numbering scheme for subsections
+% % where yy is *always* a 2-digit number
+% \makeatletter
+% \renewcommand\thesubsection{\thesection.\two@digits{\arabic{subsection}}}
+% \makeatother
+
+\begin{document}
+\maketitle % Doesn't count towards the total number of pages
+\pagenumbering{roman}
+
+\newpage
+\tableofcontents % Doesn't count towards the total number of pages
+
+% \newpage
+% \section{Introduction}
+% \label{sec:introduction}
+
+\newpage
+\pagenumbering{arabic}
+\section{Initial Questions}
+\label{sec:initial_question}
+In reverse-engineering the JMonkeyEngine, there are some initial
+questions that need answering in order to gain a clearer picture
+of what the architecture and code look like.
+
+% For each of these pieces of code, reasons why they violate the
+% principles *must* be provided. We must use figures and/or metrics to
+% underline our reasoning.
+
+% Simple shortcomings in the source code don't count, such as code
+% clones of 1-2 lines, naming, or missing comments.
+
+\subsection{Main features of the program}
+\label{sec:main_features}
+% What are the main features of the program?
+
+
+
+\subsection{Important source code entities}
+\label{sec:important_src_entities}
+% Which are the important source code entities?
+
+
+\subsection{Quality, Design and Implementation: First impressions}
+\label{sec:first_impressions}
+% What is your first impression of the quality of the design and
+% implementation (also think of documentation, tests, etc.)?
+
+
+\subsection{Reengineering feasibility}
+\label{sec:reengineering_feasibility}
+% Do you think a reengineering is feasible?
+
+
+\subsection{Exceptional entities}
+\label{sec:exceptional_entities}
+% What are the exceptiona packages, classes and methods?
+
+
+\subsection{Inheritance structure}
+\label{sec:inheritance_structure}
+% What does the inheritance structure look like?
+
+
+\subsection{Scene composition: Basic elements}
+\label{sec:scene_composition}
+% What are the basic elements to compose a scene?
+
+
+\subsection{Scene rendering}
+\label{sec:scene_rendering}
+% How is a scene rendered?
+
+
+\subsection{Collision detection}
+\label{sec:collision_detection}
+% How are collisions detected?
+
+
+\newpage
+\section{Problem detection}
+\label{sec:problem_detection}
+
+By utilising a number of tools available to us (see section
+\ref{sec:used_tools} for details) and knowledge gained from this
+course we have identified a number of shortcomings in both the design
+and implementation of JMonkeyEngine. In searching for these
+shortcomings we have kept in mind the  S.O.L.I.D. design principles,
+though we have also considered the ADP and DRY principles.
+
+\subsection{Single Responsibility violation}
+\label{sec:srp_violation}
+% 2 examples of an Single Responsibility Principle violation
+
+
+\subsection{Liskov Substitution Principle violation}
+\label{sec:lsp_violation} % TODO if we choose OCP instead this should
+                          % be changed to sec:ocp_violation
+% one example of an Open/Closed Principle violation or 
+% a Liskov substitution Principle violation
+
+
+
+\subsection{Dependency Inversion Principle violation}
+\label{sec:dip_violation}
+% One example of a Dependency Inversion Principle violation
+
+
+\subsection{Acyclic Dependency Principle violation}
+\label{sec:adp_violation}
+% One example of an Acyclic Dependency Principle violation
+
+
+\subsection{Don't Repeat Yourself violation}
+\label{sec:dry_violation}
+% One example of a Don't Repeat Yourself violation
+
+
+\subsection{Other class and package design violations}
+\label{sec:other_violations}
+% This one is optional; If we have the time I recommend we do it - Joey
+
+\newpage
+\section{Used tools}
+\label{sec:used_tools}
+
+
+\subsection{static analysis}
+\label{sec:static_analysis}
+
+
+\subsection{Dynamic analysis}
+\label{sec:dynamic_analysis}
+
+
+
+\end{document}
