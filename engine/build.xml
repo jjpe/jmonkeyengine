@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1" xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:jaxrpc="http://www.netbeans.org/ns/j2se-project/jax-rpc" name="jMonkeyEngine3" default="default" basedir=".">
+<project xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1" xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3" xmlns:jaxrpc="http://www.netbeans.org/ns/j2se-project/jax-rpc" xmlns:sonar="antlib:org.sonar.ant" name="jMonkeyEngine3" default="default" basedir=".">
     <description>Builds, tests, and runs the jMonkeyEngine3 core engine.</description>
     <import file="nbproject/build-impl.xml"/>
 
@@ -548,4 +548,43 @@
         </antcall>
     </target>
     
+    <!--
+       ****************************************************************
+       Only Relevant for building Sonar from here on
+		consider moving this to continuous integration
+       ****************************************************************
+      -->
+<!-- Define the Sonar global properties -->
+<property name="sonar.host.url" value="http://Blaaskaak:8080/sonar" />
+<property name="sonar.jdbc.url" value="jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;characterEncoding=utf8" />
+<property name="sonar.jdbc.username" value="sonar" />
+<property name="sonar.jdbc.password" value="sonar" />
+ 
+<!-- Define the Sonar project properties -->
+<property name="sonar.projectKey" value="com.jme3:jmonkey-engine" />
+<property name="sonar.projectName" value="The jMonkey engine" />
+<property name="sonar.projectVersion" value="3.0" />
+<property name="sonar.language" value="java" />
+<!--
+	Note that we cant check src/bullet and src/jbullet at the same time.
+	Also, the src/android part is not present as we will not focus on that
+	for this project
+-->
+<property name="sonar.sources" value="
+src/blender,src/bullet,src/bullet-common,src/bullet-native,src/core,
+src/core-data,src/core-effects,src/core-plugins,src/desktop,
+src/jheora,src/jogg,src/lwjgl,src/networking,src/niftygui,src/ogre,
+src/terrain,src/test,src/tools,src/xml" />
+<property name="sonar.binaries" value="bin" />
+ 
+<!-- Define the Sonar target -->
+<target name="sonar">
+    <taskdef uri="antlib:org.sonar.ant" resource="org/sonar/ant/antlib.xml">
+        <classpath path="lib/sonar-ant-task-2.0.jar" />
+    </taskdef>
+ 
+    <!-- Execute Sonar -->
+    <sonar:sonar />
+</target>
+
 </project>
