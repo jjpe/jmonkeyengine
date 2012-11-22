@@ -55,3 +55,5 @@ http://marketplace.eclipse.org/content/sonar
 http://marketplace.eclipse.org/content/eclipse-metrics
 ## Clover
 http://marketplace.eclipse.org/content/atlassian-clover-eclipse
+## TPTP
+Generates UML sequence diagrams from Java source code
