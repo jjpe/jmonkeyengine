@@ -51,82 +51,101 @@ of what the architecture and code look like.
 \subsection{Main features of the program}
 \label{sec:main_features}
 % What are the main features of the program?
-jMonkey engine can be used to create games.
-To do so, it offers the following features:
+
+jMonkeyEngine can be used to create games. To this end it offers a
+number of features, among which we consider the following ones the
+most important:
 \begin{itemize}
 	\item Creating Applications 
 	(\verb|com.jme3.app|, \verb|com.jme3.system|)
 	\item Managing Assets of these applications (\verb|com.jme3.asset|)
-	\begin{itemize}
-		\item Animations (\verb|com.jme3.animation|)
-		\item Meshes (\verb|com.jme3.scene|)
-		\item Textures (\verb|com.jme3.texture|)
-		\item 2D Pictures (\verb|com.jme3.ui|)
-		\item Scenes 
-		(referred to as Spatial in the code \verb|com.jme3.scene|)
-		\item Materials (\verb|com.jme3.material|)
-		\item Shaders (\verb|com.jme3.shader|)
-	\end{itemize}
+	% \begin{itemize}
+	% 	\item Animations (\verb|com.jme3.animation|)
+	% 	\item Meshes (\verb|com.jme3.scene|)
+	% 	\item Textures (\verb|com.jme3.texture|)
+	% 	\item 2D Pictures (\verb|com.jme3.ui|)
+	% 	\item Scenes
+	% 	(referred to as Spatial in the code \verb|com.jme3.scene|)
+	% 	\item Materials (\verb|com.jme3.material|)
+	% 	\item Shaders (\verb|com.jme3.shader|)
+	% \end{itemize}
 	
 	\item Real time Rendering (\verb|com.jme3.renderer|)
-	\item Creating Particle effects (\verb|com.jme3.effect|)
-	\item Creating post processing effects (\verb|com.jme3.post|)
-	\item Collision detection 
-	(\verb|com.jme3.collision|, 
-	\verb|com.jme3.bounding|)
-	\item Cinematic events and motion paths
-	(\verb|com.jme3.cinematic|)
-	\item Exporting assets (\verb|com.jme3.export|)
-	\item Support for fonts 
-	(\verb|com.jme3.font|, \verb|com.jme3.renderer|)
-	\item Dealing with user input (\verb|com.jme3.input|)
-	\item Lighting of a scene 
-	(\verb|com.jme3.light|, \verb|com.jme3.shadow|)
+	% \item Creating Particle effects (\verb|com.jme3.effect|)
+	% \item Creating post processing effects (\verb|com.jme3.post|)
+	\item Collision detection (\verb|com.jme3.collision|, \verb|com.jme3.bounding|)
+	% \item Cinematic events and motion paths (\verb|com.jme3.cinematic|)
+	% \item Exporting assets (\verb|com.jme3.export|)
+	% \item Support for fonts (\verb|com.jme3.font|, \verb|com.jme3.renderer|)
+	% \item Dealing with user input (\verb|com.jme3.input|)
+	% \item Lighting of a scene (\verb|com.jme3.light|, \verb|com.jme3.shadow|)
 	\item Shaders (\verb|com.jme3.shader|)
 \end{itemize}
-
 
 
 \subsection{Important source code entities}
 \label{sec:important_src_entities}
 % Which are the important source code entities?
 
+% Volker
 
 \subsection{Quality, Design and Implementation:\\First impressions}
 \label{sec:first_impressions}
 % What is your first impression of the quality of the design and
 % implementation (also think of documentation, tests, etc.)?
 
+% Joey
+
+% Notes:
+% - package structure is good
+% - The code itself uses a lot of interfaces but also
+%   shows signs of organic growth.
+% - There is a tradeof between speed and design,
+%   epecially in the com.jme3.math package
 
 \subsection{Reengineering feasibility}
 \label{sec:reengineering_feasibility}
 % Do you think a reengineering is feasible?
 
+% Volker
 
 \subsection{Exceptional entities}
 \label{sec:exceptional_entities}
-% What are the exceptiona packages, classes and methods?
+% What are the exceptional packages, classes and methods?
 
+% Volker (sonar):
+% - packages
+% - Search for methods ans classes that smell
+
+% Joey (inCode):
+% - god classes and general class & interface stuff
+% - brain methods & feature envy
 
 \subsection{Inheritance structure}
 \label{sec:inheritance_structure}
 % What does the inheritance structure look like?
 
+% Volker (& Joey)
 
 \subsection{Scene composition: Basic elements}
 \label{sec:scene_composition}
 % What are the basic elements to compose a scene?
 
+% Volker
 
 \subsection{Scene rendering}
 \label{sec:scene_rendering}
 % How is a scene rendered?
 
+% Joey
 
 \subsection{Collision detection}
 \label{sec:collision_detection}
 % How are collisions detected?
 
+% in the com.jme3.bounding package for collision detection
+% Bounding boxes are being made, check the code and the site
+% for details
 
 \newpage
 \section{Problem detection}
