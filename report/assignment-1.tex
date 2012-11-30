@@ -59,6 +59,8 @@ most important:
 	\item Creating Applications 
 	(\verb|com.jme3.app|, \verb|com.jme3.system|)
 	\item Managing Assets of these applications (\verb|com.jme3.asset|)
+	The main assets are scenes, 
+	located in the \verb|com.jme3.scene| package.
 	% \begin{itemize}
 	% 	\item Animations (\verb|com.jme3.animation|)
 	% 	\item Meshes (\verb|com.jme3.scene|)
@@ -86,7 +88,22 @@ most important:
 \subsection{Important source code entities}
 \label{sec:important_src_entities}
 % Which are the important source code entities?
+For managing assets, the AssetManager and ImplHandler are important.
 
+For creating applications, the SimpleApplication is important.
+For managing and configuring them, the
+AppSettings, JmeSystem and JmeSystemDelegate, 
+AbstractAppState and AppStateManager 
+seem to be important.
+
+For real time rendering, the  RenderManager,
+Camera, ViewPort and
+RenderQueue are important.
+The actual Renderer is located in the lwjgl subsystem 
+and not part of the core subsystem. 
+Therefore we will skip them for this project.
+ 
+For shaders, the Shader, Uniform and UniformBindingManager seem important.
 % Volker
 
 \subsection{Quality, Design and Implementation:\\First impressions}
