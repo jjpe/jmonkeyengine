@@ -1,0 +1,16 @@
+Packages:
+com.jme3.input.awt
+com.jme3.math
+com.jme3.system
+com.jme3.scene.shape
+
+com.jme3.texture.plugins // src/core-plugins
+com.jme3.export.binary // src/core-plugins
+com.jme3.scene.plugins.blender.textures.blending // src/blending
+com.jme3.renderer.lwjgl // src/lwjgl
+com.jme3.audio.lwjgl // src/lwjgl
+com.jme3.scene.plugins.ogre // src/ogre
+jme3tools.converters.model.strip // src/tools
+com.jme3.font.plugins // src/core-plugins
+com.jme3.scene.plugins.blender.textures // src/blender
+
