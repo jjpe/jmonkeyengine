@@ -1,4 +1,9 @@
 .DS_Store
+
+engine/.classpath
+engine/.project
+engine/bin
+
 report/.DS_Store
 report/assignment-1-blx.bib
 report/assignment-1.aux
