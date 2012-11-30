@@ -1,4 +1,38 @@
-# Installation in eclipse
+# Sonar
+## The DIY method
+Go to www.sonarsource.org, which is the website of Sonar.
+On the right side you will see a 'Get Started' section,
+which will tell you where to download it from.
+
+http://docs.codehaus.org/display/SONAR/Installing+Sonar    
+contains more information on installing it.
+
+Then use one of the links under 'Installing Client' to get a client.
+The client will analyze the code of your project using the server.
+A fully browsable report will now be available on the server (localhost:9000 by default).
+
+## A little more guidance
+Download the zip and unzip it.
+There should either be some buildfile or build script to create a sonar.war file, which 
+can be hosted on a servlet container like jetty or tomcat, or there should be a run script,
+which will do this hosting for you.
+
+After the server is started (either by manually hosting the war file, or running some run script)
+it can (by default) be found at http://localhost:9000.
+This website is where you will see an overview of the results of all your projects that you analyzed.
+
+To get a project analyzed, you need to use a Sonar Client.
+The Ant Task client can be downloaded from http://docs.codehaus.org/display/SONAR/Installing+and+Configuring+Sonar+Ant+Task.
+Installation and usage instructions can be found at http://docs.codehaus.org/display/SONAR/Analyzing+with+Sonar+Ant+Task.
+
+You just copy the example ant code into an xml file and then run the sonar task using `ant -f file.xml sonar`.
+Of course you do need to change the properties to fit your project, but that should be straight forward.
+Add the following property if you changed the default location of sonar:    
+`<property name="sonar.host.url" value="http://Blaaskaak:8080/sonar" />`
+
+
+
+# Installation of jMonkey in eclipse
 ## Importing in Eclipse
 Go to `File -> new -> Java Project`    
 Untick `use default location` and browse to this repository's `engine` folder.    
