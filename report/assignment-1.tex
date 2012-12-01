@@ -88,22 +88,36 @@ most important:
 \subsection{Important source code entities}
 \label{sec:important_src_entities}
 % Which are the important source code entities?
-For managing assets, the AssetManager and ImplHandler are important.
 
-For creating applications, the SimpleApplication is important.
-For managing and configuring them, the
-AppSettings, JmeSystem and JmeSystemDelegate, 
-AbstractAppState and AppStateManager 
-seem to be important.
 
-For real time rendering, the  RenderManager,
-Camera, ViewPort and
-RenderQueue are important.
+
+\begin{tabular}{| c | c |}
+  \hline
+  \textbf{High-level function}      & \textbf{Important source entities} \\
+  \hline
+  \hline
+  Managing assets                   & AssetManager, ImplHandler \\
+  \hline
+  Creating applications             & SimpleApplication \\
+  \hline
+  Managing/configuring applications & AppSettings, JmeSystem, \\
+                                    & JmeSystemDelegate, \\
+                                    & AbstractAppState, AppStateManager \\
+  \hline
+  Real time rendering               & RenderManager, Camera,  \\
+                                    & ViewPort, RenderQueue \\
+  \hline
+  Shaders                           & Shader, Uniform, \\
+                                    & UniformBindingManager \\
+  \hline
+\end{tabular}
+\newline
+\newline
 The actual Renderer is located in the lwjgl subsystem 
 and not part of the core subsystem. 
 Therefore we will skip them for this project.
  
-For shaders, the Shader, Uniform and UniformBindingManager seem important.
+For shaders, the Shader, Uniform and UniformBindingManager seem to be important.
 % Volker
 
 \subsection{Quality, Design and Implementation:\\First impressions}
