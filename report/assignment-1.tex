@@ -93,10 +93,11 @@ most important:
 
 \begin{tabular}{| c | c |}
   \hline
-  \textbf{High-level function}      & \textbf{Important source entities} \\
+  \textbf{Feature}      & \textbf{Important source entities} \\
   \hline
   \hline
-  Managing assets                   & AssetManager, ImplHandler \\
+  Managing assets                   & AssetManager, ImplHandler, \\
+									& Node, Mesh, Geometry, Spatial \\
   \hline
   Creating applications             & SimpleApplication \\
   \hline
@@ -110,6 +111,8 @@ most important:
   Shaders                           & Shader, Uniform, \\
                                     & UniformBindingManager \\
   \hline
+  Collision Detection				& CollisionResults, BoundingVolume\\
+  \hline
 \end{tabular}
 \newline
 \newline
@@ -117,7 +120,6 @@ The actual Renderer is located in the lwjgl subsystem
 and not part of the core subsystem. 
 Therefore we will skip them for this project.
  
-For shaders, the Shader, Uniform and UniformBindingManager seem to be important.
 % Volker
 
 \subsection{Quality, Design and Implementation:\\First impressions}
