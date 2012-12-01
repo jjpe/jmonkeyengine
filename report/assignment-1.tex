@@ -8,6 +8,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{hyperref}
 \usepackage{enumerate}
+\usepackage{multirow}
 
 \usepackage[backend=bibtex]{biblatex}
 \addbibresource{references.bib}
@@ -142,14 +143,93 @@ Therefore we will skip them for this project.
 Reengineering is feasible, as the current design and quality really isn't bad.
 Also, since we don't have a specific goal for our reengineering 
 (like making it easier to add a specific feature), 
-we can just reengineer whatever and wherever we like.
-This makes it obvious that reengineering is feasible.
+
+
 % Volker
 
 \subsection{Exceptional entities}
 \label{sec:exceptional_entities}
 % What are the exceptional packages, classes and methods?
 
+\begin{tabular}{|c|c|}
+\hline
+\multicolumn{2}{|c|}{Complexity per class}\\
+\hline
+\textbf{Package} & \textbf{Classes}\\
+\hline
+\verb|com.jme3.math|			& FastMath, Quaternation, Matrices, Vectors\\
+\hline
+\verb|com.jme3.bounding|		& BoundingBox, BoundingSphere\\
+\hline
+\verb|com.jme3.scene|			& Node, Mesh, Geometry, Spatial\\
+\hline
+\verb|com.jme3.renderer|		& RenderManager, Caps\\
+\hline
+\verb|com.jme3.material|		& Material, MatParam\\
+\hline
+\verb|com.jme3.collision|		& SweepSphere\\
+\hline
+\end{tabular}
+
+\begin{tabular}{|c|c|}
+\hline
+\multicolumn{2}{|c|}{Lack of cohesion (LCOM4)}\\
+\hline
+\textbf{Package} & \textbf{Classes}\\
+\hline
+\verb|com.jme3.system|			& AppSettings, JmeSystemDelegate\\
+\hline
+\verb|com.jme3.math|			& Quaternation, ColorRGBA\\
+\hline
+\verb|com.jme3.scene|			& Node, SimpleBatchNode, Spatial\\
+\hline
+\verb|com.jme3.shader|			& Shader\\
+\hline
+\verb|com.jme3.asset|			& AssetKey, ImplHandler\\
+\hline
+\end{tabular}
+
+\begin{tabular}{|c|c|}
+\hline
+\multicolumn{2}{|c|}{Too much responsibility (Afferent Coupling)}\\
+\hline
+\textbf{Package} & \textbf{Classes}\\
+\hline
+\verb|com.jme3.math|			& Vector3f, FastMath, Quaternation,\\
+								& ColorRGBA, Matrix4f, Matrix3f\\
+\hline
+\verb|com.jme3.scene|			& Spatial, Mesh, VertexBuffer,\\
+								& Geometry, Node\\
+\hline
+\verb|com.jme3.renderer|		& Camera, Viewport\\
+								& Renderer, RenderManager\\
+\hline
+\verb|com.jme3.asset|			& AssetKey, AssetManager\\
+\hline
+\end{tabular}
+
+\begin{tabular}{|c|c|}
+\hline
+\multicolumn{2}{|c|}{Instability (Efferent/Afferent coupling ratio)}\\
+\hline
+\textbf{Package} & \textbf{Classes}\\
+\hline
+\verb|com.jme3.asset|		& DesktopAssetManager\\
+\hline
+\verb|com.jme3.scene|		& BatchNode\\
+\hline
+\verb|com.jme3.app|			& SimpleApplication\\
+\hline
+\verb|com.jme3.collision|	& BIHTree, BIHNode\\
+\hline
+\verb|com.jme3.shader|		& Uniform, UniformBindingManager\\
+\hline
+\verb|com.jme3.bounding|	& BoundingBox, BoundingSphere\\
+\hline
+\end{tabular}
+
+The \verb|com.jme3.math| package has quite some duplicate 
+code blocks. Exceptional classes are LineSegment and Matrix4f.
 % Volker (sonar):
 % - packages
 % - Search for methods ans classes that smell
