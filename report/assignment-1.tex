@@ -151,9 +151,13 @@ Also, since we don't have a specific goal for our reengineering
 \label{sec:exceptional_entities}
 % What are the exceptional packages, classes and methods?
 
+% Volker (sonar):
+% - packages
+% - Search for methods ans classes that smell
+
 \begin{tabular}{|c|c|}
 \hline
-\multicolumn{2}{|c|}{Complexity per class}\\
+\multicolumn{2}{|c|}{\textit{Complexity per class}}\\
 \hline
 \textbf{Package} & \textbf{Classes}\\
 \hline
@@ -161,7 +165,7 @@ Also, since we don't have a specific goal for our reengineering
 \hline
 \verb|com.jme3.bounding|		& BoundingBox, BoundingSphere\\
 \hline
-\verb|com.jme3.scene|			& Node, Mesh, Geometry, Spatial\\
+\verb|com.jme3.scene|			& node, mesh, Geometry, Spatial\\
 \hline
 \verb|com.jme3.renderer|		& RenderManager, Caps\\
 \hline
@@ -169,11 +173,9 @@ Also, since we don't have a specific goal for our reengineering
 \hline
 \verb|com.jme3.collision|		& SweepSphere\\
 \hline
-\end{tabular}
 
-\begin{tabular}{|c|c|}
 \hline
-\multicolumn{2}{|c|}{Lack of cohesion (LCOM4)}\\
+\multicolumn{2}{|c|}{\textit{Lack of cohesion (LCOM4)}}\\
 \hline
 \textbf{Package} & \textbf{Classes}\\
 \hline
@@ -187,30 +189,26 @@ Also, since we don't have a specific goal for our reengineering
 \hline
 \verb|com.jme3.asset|			& AssetKey, ImplHandler\\
 \hline
-\end{tabular}
 
-\begin{tabular}{|c|c|}
 \hline
-\multicolumn{2}{|c|}{Too much responsibility (Afferent Coupling)}\\
+\multicolumn{2}{|c|}{\textit{Too much responsibility (Afferent Coupling)}}\\
 \hline
 \textbf{Package} & \textbf{Classes}\\
 \hline
 \verb|com.jme3.math|			& Vector3f, FastMath, Quaternation,\\
-								& ColorRGBA, Matrix4f, Matrix3f\\
+                                        & ColorRGBA, Matrix4f, Matrix3f\\
 \hline
 \verb|com.jme3.scene|			& Spatial, Mesh, VertexBuffer,\\
-								& Geometry, Node\\
+					& Geometry, Node\\
 \hline
 \verb|com.jme3.renderer|		& Camera, Viewport\\
-								& Renderer, RenderManager\\
+					& Renderer, RenderManager\\
 \hline
 \verb|com.jme3.asset|			& AssetKey, AssetManager\\
 \hline
-\end{tabular}
 
-\begin{tabular}{|c|c|}
 \hline
-\multicolumn{2}{|c|}{Instability (Efferent/Afferent coupling ratio)}\\
+\multicolumn{2}{|c|}{\textit{Instability (Efferent/Afferent coupling ratio)}}\\
 \hline
 \textbf{Package} & \textbf{Classes}\\
 \hline
@@ -218,7 +216,7 @@ Also, since we don't have a specific goal for our reengineering
 \hline
 \verb|com.jme3.scene|		& BatchNode\\
 \hline
-\verb|com.jme3.app|			& SimpleApplication\\
+\verb|com.jme3.app|	        & SimpleApplication\\
 \hline
 \verb|com.jme3.collision|	& BIHTree, BIHNode\\
 \hline
@@ -226,17 +224,45 @@ Also, since we don't have a specific goal for our reengineering
 \hline
 \verb|com.jme3.bounding|	& BoundingBox, BoundingSphere\\
 \hline
-\end{tabular}
+\end{tabular}\\\\
 
-The \verb|com.jme3.math| package has quite some duplicate 
-code blocks. Exceptional classes are LineSegment and Matrix4f.
-% Volker (sonar):
-% - packages
-% - Search for methods ans classes that smell
+The \verb|com.jme3.math| package has quite a few duplicate 
+code blocks. Exceptional classes are LineSegment and Matrix4f.\\
 
 % Joey (inCode):
 % - god classes and general class & interface stuff
 % - brain methods & feature envy
+
+Also, a number of \textbf{God classes}, %\textbf{Brain methods} and
+\textbf{Data classes} and a number of \textbf{Feature envy} and
+\textbf{Code duplication} occurrences have been found
+The 5 most egregious of each of these are:
+
+\begin{tabular}{| l || c |}
+  \hline
+  % \textbf{Brain methods}    &  (),  () \\
+  %                           &  (), \\
+  %                           &  (),  () \\
+  % \hline
+  \textbf{Data classes}     & TempVars (50.5), RenderContext (19.25), \\
+                            & Environment (14.25), \\
+                            & TouchEvent (8.55), StringBlock (8.33) \\
+  \hline
+  \textbf{God classes}      & Material (81.03), Camera (35.37), \\
+                            & RenderManager (33.99), \\
+                            & BatchNode (24.96), BufferUtils (23.62) \\
+  \hline
+  \textbf{Feature Envy}     & BoundingBox.intersects (22), BIHTree.createBox (20) \\
+                            & Ray.intersects (19), Camera.lookAt (15), \\
+                            & TangentBinormalGenerator.linkVertices (14) \\
+  \hline
+  \textbf{Code Duplication} & LineSegment.distanceSquared (9.1), Matrix4f.get (7.4) \\
+                            & Matrix3f.get (7.4), Texture3D.setWrap (6.9), \\
+                            & TextureCubeMap.setWrap (6.9) \\
+  \hline
+\end{tabular}
+
+% The numbers in braces represent the 
 
 \subsection{Inheritance structure}
 \label{sec:inheritance_structure}
