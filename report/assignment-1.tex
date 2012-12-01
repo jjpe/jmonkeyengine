@@ -153,7 +153,7 @@ Also, since we don't have a specific goal for our reengineering
 
 \begin{tabular}{|c|c|}
 \hline
-\multicolumn{2}{|c|}{Complexity per class}\\
+\multicolumn{2}{|c|}{\bfseries Complexity per class}\\
 \hline
 \textbf{Package} & \textbf{Classes}\\
 \hline
@@ -173,7 +173,7 @@ Also, since we don't have a specific goal for our reengineering
 
 \begin{tabular}{|c|c|}
 \hline
-\multicolumn{2}{|c|}{Lack of cohesion (LCOM4)}\\
+\multicolumn{2}{|c|}{\bfseries Lack of cohesion (LCOM4)}\\
 \hline
 \textbf{Package} & \textbf{Classes}\\
 \hline
@@ -191,7 +191,7 @@ Also, since we don't have a specific goal for our reengineering
 
 \begin{tabular}{|c|c|}
 \hline
-\multicolumn{2}{|c|}{Too much responsibility (Afferent Coupling)}\\
+\multicolumn{2}{|c|}{\bfseries Too much responsibility (Afferent Coupling)}\\
 \hline
 \textbf{Package} & \textbf{Classes}\\
 \hline
@@ -210,7 +210,7 @@ Also, since we don't have a specific goal for our reengineering
 
 \begin{tabular}{|c|c|}
 \hline
-\multicolumn{2}{|c|}{Instability (Efferent/Afferent coupling ratio)}\\
+\multicolumn{2}{|c|}{\bfseries Instability (Efferent/Afferent coupling ratio)}\\
 \hline
 \textbf{Package} & \textbf{Classes}\\
 \hline
@@ -230,6 +230,42 @@ Also, since we don't have a specific goal for our reengineering
 
 The \verb|com.jme3.math| package has quite some duplicate 
 code blocks. Exceptional classes are LineSegment and Matrix4f.
+
+\begin{tabular}{|c|c|c|}
+\hline
+\multicolumn{3}{|c|}{\bfseries Complex methods (CC)}\\
+\hline
+\textbf{Package}&\textbf{Class}&\textbf{Method}\\
+\hline
+\verb|com.jme3.math|	&LineSegment	&distanceSquared\\
+\hline
+						&Matrix4f	&get\\
+\hline
+						&			&set\\
+\hline
+						&			&equals\\
+\hline
+						&			&equalIdentity\\
+\hline
+\verb|com.jme3.scene|	&BatchNode	&mergeGeometries\\
+\hline
+						&Mesh		&setInterleaved\\
+\hline
+\verb|com.jme3.scene.shape|	&Cylinder	&updateGeometry\\
+\hline
+\verb|com.jme3.shader|	&Uniform	&setValue\\
+\hline
+						&UniformBindingManager	&updateUniformBindings\\
+\hline
+\verb|com.jme3.asset|	&BlenderKey	&equals\\
+\hline
+\verb|com.jme3.material|	&RenderState	&contentHashCode\\
+\hline
+							&Material		&read\\
+\hline
+							&MatParam		&getValueAsString\\
+\hline
+\end{tabular}
 % Volker (sonar):
 % - packages
 % - Search for methods ans classes that smell
@@ -241,6 +277,21 @@ code blocks. Exceptional classes are LineSegment and Matrix4f.
 \subsection{Inheritance structure}
 \label{sec:inheritance_structure}
 % What does the inheritance structure look like?
+com.jme3.app
+SystemListener
+Application
+AbstractAppState / AppState
+Node
+Control
+
+com.jme3.asset
+AssetEventListener
+AssetInfo
+AssetLoader
+AssetLocator
+AssetManager
+AssetProcessor
+
 
 % Volker (& Joey)
 
