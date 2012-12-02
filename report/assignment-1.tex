@@ -302,20 +302,69 @@ The 5 most egregious of each of these are:
 \subsection{Inheritance structure}
 \label{sec:inheritance_structure}
 % What does the inheritance structure look like?
-com.jme3.app
-SystemListener
-Application
-AbstractAppState / AppState
-Node
-Control
+\begin{table}
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Package}&\textbf{Entity}&\textbf{Subtyped in}\\
+\hline
+\verb|com.jme3.app.state |&
+	AbstractAppState&
+		states in \verb|com.jme3.app|\\
 
-com.jme3.asset
-AssetEventListener
-AssetInfo
-AssetLoader
-AssetLocator
-AssetManager
-AssetProcessor
+	% why are the implementations of this in the app package?
+\hline
+\verb|com.jme3.asset|&
+	AssetKey&
+	keys in \verb|asset|, \verb|shader|, \verb|scene|, \verb|audio|\\
+\hline&
+	AssetProcessor&
+	processors in \verb|asset|, \verb|material|, \verb|texture|\\
+\hline&
+	CloneableSmartAsset&
+	Material in \verb|material|,\\&& 
+	Spatial in \verb|scene|\\&&
+	Texture in \verb|texture|\\
+\hline&
+	AssetLoader&
+	loaders in\\&&
+	\verb|asset|, \verb|material|, \verb|texture|,\\&&
+	\verb|scene|, \verb|audio|, \verb|font|, \\&&
+	\verb|cursoris|, \verb|shader|, \verb|export|\\
+\hline&
+	AssetLocator&
+	locators in plugins\\
+\hline
+\verb|com.jme3.collision|&
+	Collidable&
+	AbstractTriangle, Ray in \verb|math|,\\&&
+	Spatial in \verb|scene|,\\&&
+	BoundingVolume in \verb|bounding|,\\&&
+	SweepSphere in \verb|collision|\\
+
+\hline
+\verb|com.jme3.scene|&
+	Spatial&
+	inherited by Node and\\&&
+	Geometry from \verb|scene|,\\&&
+	which are in turn inherited\\&&
+	throughout the system\\
+\hline&
+	Mesh&
+	used in all kinds of \\&&
+	shapes in \verb|scene.shape|,\\&&
+	\verb|scene.debug| and \verb|effect|\\
+\hline
+\verb|com.jme3.scene.control|&
+	Control&
+	implemented by AbstractControl \\&&
+	in \verb|scene.control|,\\&&
+	which is in turn extended \\&&
+	in all kinds of Controls\\&&
+	throughout the system\\
+\hline
+\end{tabular}
+\end{table}
 
 
 % Volker (& Joey)
@@ -405,6 +454,8 @@ Below is a list of the analysis and refactoring tools we used.
 \item \textbf{inCode} is an Eclipse plugin that generates \emph{class
     blueprints} from Java source code.
 \item \textbf{Sonar}
+	Is a tool which entails several code checking tools like PMD and FindBugs. It also checks for metrics like complexity, code duplicates and coupling.
+	The findings are easily browsable via the Sonar server.
 \end{enumerate}
 
 % \subsection{Dynamic analysis}
