@@ -94,11 +94,11 @@ most important:
 
 \begin{tabular}{| c | c |}
   \hline
-  \textbf{Feature}      & \textbf{Important source entities} \\
+  \textbf{Feature}                  & \textbf{Important source entities} \\
   \hline
   \hline
   Managing assets                   & AssetManager, ImplHandler, \\
-									& Node, Mesh, Geometry, Spatial \\
+				    & Node, Mesh, Geometry, Spatial \\
   \hline
   Creating applications             & SimpleApplication \\
   \hline
@@ -112,7 +112,7 @@ most important:
   Shaders                           & Shader, Uniform, \\
                                     & UniformBindingManager \\
   \hline
-  Collision Detection				& CollisionResults, BoundingVolume\\
+  Collision Detection		    & CollisionResults, BoundingVolume\\
   \hline
 \end{tabular}
 \newline
@@ -175,15 +175,15 @@ Also, since we don't have a specific goal for our reengineering
 \hline
 \textbf{Package} & \textbf{Classes}\\
 \hline
-\verb|com.jme3.system|			& AppSettings, JmeSystemDelegate\\
+\verb|com.jme3.system|		& AppSettings, JmeSystemDelegate\\
 \hline
-\verb|com.jme3.math|			& Quaternation, ColorRGBA\\
+\verb|com.jme3.math|		& Quaternation, ColorRGBA\\
 \hline
-\verb|com.jme3.scene|			& Node, SimpleBatchNode, Spatial\\
+\verb|com.jme3.scene|		& Node, SimpleBatchNode, Spatial\\
 \hline
-\verb|com.jme3.shader|			& Shader\\
+\verb|com.jme3.shader|		& Shader\\
 \hline
-\verb|com.jme3.asset|			& AssetKey, ImplHandler\\
+\verb|com.jme3.asset|		& AssetKey, ImplHandler\\
 \hline
 
 \hline
@@ -191,16 +191,16 @@ Also, since we don't have a specific goal for our reengineering
 \hline
 \textbf{Package} & \textbf{Classes}\\
 \hline
-\verb|com.jme3.math|			& Vector3f, FastMath, Quaternation,\\
-								& ColorRGBA, Matrix4f, Matrix3f\\
+\verb|com.jme3.math|		& Vector3f, FastMath, Quaternation,\\
+                                & ColorRGBA, Matrix4f, Matrix3f\\
 \hline
-\verb|com.jme3.scene|			& Spatial, Mesh, VertexBuffer,\\
-								& Geometry, Node\\
+\verb|com.jme3.scene|		& Spatial, Mesh, VertexBuffer,\\
+				& Geometry, Node\\
 \hline
-\verb|com.jme3.renderer|		& Camera, Viewport\\
-								& Renderer, RenderManager\\
+\verb|com.jme3.renderer|	& Camera, Viewport\\
+				& Renderer, RenderManager\\
 \hline
-\verb|com.jme3.asset|			& AssetKey, AssetManager\\
+\verb|com.jme3.asset|		& AssetKey, AssetManager\\
 \hline
 
 \hline
@@ -212,7 +212,7 @@ Also, since we don't have a specific goal for our reengineering
 \hline
 \verb|com.jme3.scene|		& BatchNode\\
 \hline
-\verb|com.jme3.app|			& SimpleApplication\\
+\verb|com.jme3.app|	        & SimpleApplication\\
 \hline
 \verb|com.jme3.collision|	& BIHTree, BIHNode\\
 \hline
@@ -231,33 +231,33 @@ code blocks. Exceptional classes are LineSegment and Matrix4f.
 \hline
 \textbf{Package}&\textbf{Class}&\textbf{Method}\\
 \hline
-\verb|com.jme3.math|	&LineSegment	&distanceSquared\\
+\verb|com.jme3.math|	        & LineSegment	        & distanceSquared\\
 \hline
-						&Matrix4f	&get\\
+			        & Matrix4f	        & get\\
 \hline
-						&			&set\\
+			        &			& set\\
 \hline
-						&			&equals\\
+			        &			& equals\\
 \hline
-						&			&equalIdentity\\
+                                &			& equalIdentity\\
 \hline
-\verb|com.jme3.scene|	&BatchNode	&mergeGeometries\\
+\verb|com.jme3.scene|	        & BatchNode	        & mergeGeometries\\
 \hline
-						&Mesh		&setInterleaved\\
+			        & Mesh		        & setInterleaved\\
 \hline
-\verb|com.jme3.scene.shape|	&Cylinder	&updateGeometry\\
+\verb|com.jme3.scene.shape|	& Cylinder	        & updateGeometry\\
 \hline
-\verb|com.jme3.shader|	&Uniform	&setValue\\
+\verb|com.jme3.shader|	        & Uniform	        & setValue\\
 \hline
-						&UniformBindingManager	&updateUniformBindings\\
+				& UniformBindingManager	& updateUniformBindings\\
 \hline
-\verb|com.jme3.asset|	&BlenderKey	&equals\\
+\verb|com.jme3.asset|	        & BlenderKey	        & equals\\
 \hline
-\verb|com.jme3.material|	&RenderState	&contentHashCode\\
+\verb|com.jme3.material|	& RenderState	        & contentHashCode\\
 \hline
-							&Material		&read\\
+				& Material	        & read\\
 \hline
-							&MatParam		&getValueAsString\\
+				& MatParam	        & getValueAsString\\
 \hline
 \end{tabular}
 % Volker (sonar):
@@ -407,6 +407,11 @@ course we have identified a number of shortcomings in both the design
 and implementation of JMonkeyEngine. In searching for these
 shortcomings we have kept in mind the  S.O.L.I.D. design principles,
 though we have also considered the ADP and DRY principles.
+
+% These questions must be answered:
+% - What the exact problem is
+% - Where the problem is
+% - Why it is a problem
 
 \subsection{Single Responsibility violation}
 \label{sec:srp_violation}
