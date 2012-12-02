@@ -323,7 +323,15 @@ AssetProcessor
 \subsection{Scene composition: Basic elements}
 \label{sec:scene_composition}
 % What are the basic elements to compose a scene?
+Scenes are represented as a scene graph.
+This graph exists of Spatials, which represent (collections of) objects in space. 
 
+There are two types of Spatials: Node and Geometry.
+Nodes group other Spatials (their children) together, 
+so all these children can be placed and moved relative to their parent.
+A Geometry node represents an actual visible object in the scene.
+It can not have children, but does have a Mesh (its shape in space) 
+and a Material (determining its appearance).
 % Volker
 
 \subsection{Scene rendering}
