@@ -14,6 +14,7 @@
 \DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\small}
 \DefineVerbatimEnvironment{example}{Verbatim}{fontsize=\small}
 
+\usepackage{graphicx}
 % \usepackage[margin=2cm]{geometry}
 \usepackage[backend=bibtex]{biblatex}
 \addbibresource{references.bib}
@@ -466,14 +467,13 @@ dialog	& InputSystemJme\\\hline
 		& Application\\\hline
 		& SimpleApplication\\\hline
 permissions	& ClasspathLocator\\\hline
-			& AppletHarness\\\hline
-			& LwjglAbstractDisplay\\\hline
+		& AppletHarness\\\hline
+		& LwjglAbstractDisplay\\\hline
 image IO	& ScreenshotAppState\\\hline
 storage folder	& SaveGame\\\hline
-				& ScreenshotAppState\\\hline
+		& ScreenshotAppState\\\hline
 platform	& LwjglCanvas\\\hline
 \end{tabular}
-
 
 \subsection{Open-Closed Principle / Liskov Substitution Principle violation}
 \label{sec:lsp_violation} % TODO if we choose OCP instead this should
@@ -501,6 +501,12 @@ implementation of Material.
 \subsection{Acyclic Dependency Principle violation}
 \label{sec:adp_violation}
 % One example of an Acyclic Dependency Principle violation
+
+The packages \verb|com.jme3.scene|, \verb|com.jme3.scene| and
+\verb|com.jme3.renderer| together violate the ADP on the package
+level:\\
+\includegraphics[scale=0.5]{figures/adp-violation.png}
+
 
 
 \subsection{Don't Repeat Yourself violation}
