@@ -177,14 +177,19 @@ a bit more difficult.
 % Do you think a reengineering is feasible?
 Reengineering is feasible, as the current design and quality really isn't bad.
 Also, since we don't have a specific goal for our reengineering 
-(like making it easier to add a specific feature).
+(like making it easier to add a specific feature),
+we can freely choose what parts to reengineer.
+This makes it obvious that reengineering is possible.
 
 
 % Volker
-
+\newpage
 \subsection{Exceptional entities}
 \label{sec:exceptional_entities}
 % What are the exceptional packages, classes and methods?
+In this section we list some exceptional source entities
+based on several metrics.
+The metrics are printed in italics.
 
 \begin{tabular}{|c|c|}
 \hline
@@ -419,6 +424,7 @@ It can not have children, but does have a Mesh (its shape in space)
 and a Material (determining its appearance).
 % Volker
 
+\newpage
 \subsection{Scene rendering}
 \label{sec:scene_rendering}
 % How is a scene rendered?
@@ -691,6 +697,7 @@ difficult to maintain.
 % number of statements: 197
 % All caused by the code duplication
 
+\newpage
 The following snippet was taken from Region 1 according to the
 accompanying comment, and runs through lines 218-222. The snippet
 looks like this:
