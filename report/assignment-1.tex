@@ -421,12 +421,19 @@ and a Material (determining its appearance).
 \subsection{Scene rendering}
 \label{sec:scene_rendering}
 % How is a scene rendered?
-
+The RenderManager is responsible for managing the rendering.
+It has a renderGeometry method, which calls the render method
+of the Material of the Geometry.
+This render method will render the Geometry,
+based on the Material's (render- and shader)state 
+and the Geometry's Mesh (shape).
+The actual rendering is done by the Renderer
+that the Material obtained from the RendererManager.
 % Joey
 
 % Het idee:
-% Geometries hebben meshes
-% Een mesh bepaaly de shape van je object
+% Geometry heeft een Mesh en Material
+% Een Mesh bepaalt de shape van je object
 % Net zoals Spatal, Geometry en Node, heeft mesh ook geen methode die
 % iets met renderen te maken lijkt te hebben
 % Een Geometry heeft een Material en die zit vol met render stuff
