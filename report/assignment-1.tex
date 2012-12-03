@@ -492,6 +492,7 @@ the material layer to implement an interface of some sort
 in the renderer layer.
 However, in the current system the \verb|com.jme3.renderer| package 
 depends on the \verb|com.jme3.material| package.
+Or more specific: the RenderManager uses the Material class directly.
 
 This means that changes to the Material class will propagate
 to the RenderManager and it is not easy to replace the current
