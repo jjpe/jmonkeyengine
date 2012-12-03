@@ -427,6 +427,21 @@ and a Material (determining its appearance).
 \subsection{Collision detection}
 \label{sec:collision_detection}
 % How are collisions detected?
+Geometries have a Mesh, which determines their shape.
+A Mesh has a BoundingVolume, which determines the
+boundaries of the Mesh and is used in collision detection.
+A BoundingVolume must implement Collidable,
+which means they have a collideWith method.
+This method is used to check if the current Collidable
+is in collision with a given other Collidable.
+It generates a CollisionResult for each collision and adds
+them to a given CollisionResults object.
+Then it returns how many collisions were found.
+
+The abstraction does not work as pretty as intended,
+since the collideWith method is implemented
+for each different Collidable.
+% LSP VIOLATION!!
 
 % in the com.jme3.bounding package for collision detection
 % Bounding boxes are being made, check the code and the site
