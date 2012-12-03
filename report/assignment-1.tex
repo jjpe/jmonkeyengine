@@ -491,12 +491,34 @@ platform	& LwjglCanvas\\\hline
 \label{sec:adp_violation}
 % One example of an Acyclic Dependency Principle violation
 
-The packages \verb|com.jme3.scene|, \verb|com.jme3.scene| and
-\verb|com.jme3.renderer| together violate the ADP on the package
-level:\\
-\includegraphics[scale=0.5]{figures/adp-violation.png}
+The packages \verb|com.jme3.material|, \verb|com.jme3.renderer| and
+\verb|com.jme3.scene| together violate the ADP on the package level:
 
+\begin{figure}[here]
+\includegraphics[width=200px, height=200px]{figures/adp-violation.png}
+\caption{An acyclic dependency violation. Red arrows represent method
+  invocations while their thickness represents the number of
+  invocations}
+\label{fig:adp-violation}
+\end{figure}
 
+They call each other's methods: In one direction (the 3 packages
+actually form 2 cycles), \textbf{26} methods contained in classes in
+\verb|com.jme3.material| are invoking methods in classes in
+\verb|com.jme3.renderer|, \textbf{33} methods in classes in
+\verb|com.jme3.renderer| are calling methods contained in classes in
+\verb|com.jme3.scene| and \textbf{4} methods contained in classes in
+\verb|com.jme3.scene| are calling methods contained in classes in
+\verb|com.jme3.material|.
+
+The reason the ADP violation is a problem is that the packages become
+tightly coupled, which means that deployment becomes more difficult as
+now at least these 3 (and possibly more) packages cannot be
+independently deployed.
+Modifying the classes within these packages also becomes more
+difficult as there is no coherent interface to the subsystems the
+packages represent while at the same time the consequences of these
+modifications become harder to predict.
 
 \subsection{Don't Repeat Yourself violation}
 \label{sec:dry_violation}
