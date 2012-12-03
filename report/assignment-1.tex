@@ -14,6 +14,7 @@
 \DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\small}
 \DefineVerbatimEnvironment{example}{Verbatim}{fontsize=\small}
 
+% \usepackage[margin=2cm]{geometry}
 \usepackage[backend=bibtex]{biblatex}
 \addbibresource{references.bib}
 
@@ -422,12 +423,11 @@ though we have also considered the ADP and DRY principles.
 % 2 examples of an Single Responsibility Principle violation
 
 
-\subsection{Liskov Substitution Principle violation}
+\subsection{Open-Closed Principle / Liskov Substitution Principle violation}
 \label{sec:lsp_violation} % TODO if we choose OCP instead this should
                           % be changed to sec:ocp_violation
 % one example of an Open/Closed Principle violation or 
 % a Liskov substitution Principle violation
-
 
 
 \subsection{Dependency Inversion Principle violation}
@@ -444,28 +444,61 @@ though we have also considered the ADP and DRY principles.
 \label{sec:dry_violation}
 % One example of a Don't Repeat Yourself violation
 
-The method \verb|com.jme3.math.ColorRGBA.clamp()| performs
-manipulations on the \verb|com.jme3.math.ColorRGBA.{r,g,b,a}|
-fields, but the code is identical in structure for each field.\\
-This is a problem because this code is more difficult to refactor than
-when the functionality is properly factored out. Therefore, one
-possible fix is to rewrite the code to something like:
-\begin{code}
-  private float clampInternal(float val) {
-    if (val < 0) {
-      val = 0;
-    } else if (val > 1) {
-      val = 1;
-    }
-  }
+The function \verb|distanceSquared(LineSegment)| in the package\\
+\verb|com.jme3.math.LineSegment| clearly violates the DRY principle,
+as the same code structure is repeated over and over again. As it turns
+out, the LineSegment class contains \textbf{24} of such duplicate code
+blocks while the cyclomatic complexity of the method is
+\textbf{37}. Furthermore, the method is \textbf{284} SLOC long and has
+\textbf{197} statements in it. Together these extremely high numbers
+indicate that the method is difficult to understand and therefore
+difficult to maintain.
 
-  public void clamp() {
-    this.r = clampInternal(this.r);
-    this.g = clampInternal(this.g);
-    this.b = clampInternal(this.b);
-    this.a = clampInternal(this.a);
-  }
+% Metrics com.jme3.math.LineSegment.distanceSquared(LineSegment):
+% number of duplicate code blocks: 24
+% Cyclomatic complexity (branches): 37
+% LOC per method: 284
+% number of statements: 197
+% All caused by the code duplication
+
+The following snippet was taken from Region 1 according to the
+accompanying comment, and runs through lines 218-222. The snippet
+looks like this:
+\begin{code}
+  tempS1 = -(negativeDirectionDot * s0 + diffTestDot);
+  if (tempS1 < -test.getExtent()) {
+    s1 = -test.getExtent();
+    squareDistance = s1 * (s1 - (2.0f) * tempS1)
+    + s0 * (s0 + (2.0f) * diffThisDot)
+    + lengthOfDiff;
 \end{code}
+
+The \verb|if|-statement is not closed because line 223 starts an
+\verb|else if|-statement, which is a duplicate form of this one
+w.r.t. structure.
+
+% The method \verb|com.jme3.math.ColorRGBA.clamp()| performs
+% manipulations on the \verb|com.jme3.math.ColorRGBA.{r,g,b,a}|
+% fields, but the code is identical in structure for each field.\\
+% This is a problem because this code is more difficult to maintain
+% than when the functionality is properly factored out.
+% Therefore, one possible fix is to rewrite the code to something like:
+% \begin{code}
+%   private float clampInternal(float val) {
+%     if (val < 0) {
+%       val = 0;
+%     } else if (val > 1) {
+%       val = 1;
+%     }
+%   }
+%
+%   public void clamp() {
+%     this.r = clampInternal(this.r);
+%     this.g = clampInternal(this.g);
+%     this.b = clampInternal(this.b);
+%     this.a = clampInternal(this.a);
+%   }
+% \end{code}
 
 \subsection{Other class and package design violations}
 \label{sec:other_violations}
