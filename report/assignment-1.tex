@@ -10,6 +10,10 @@
 \usepackage{enumerate}
 \usepackage{multirow}
 
+\usepackage{fancyvrb}
+\DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\small}
+\DefineVerbatimEnvironment{example}{Verbatim}{fontsize=\small}
+
 \usepackage[backend=bibtex]{biblatex}
 \addbibresource{references.bib}
 
@@ -472,6 +476,28 @@ single responsibility, we might not have to change as much.
 \label{sec:dry_violation}
 % One example of a Don't Repeat Yourself violation
 
+The method \verb|com.jme3.math.ColorRGBA.clamp()| performs
+manipulations on the \verb|com.jme3.math.ColorRGBA.{r,g,b,a}|
+fields, but the code is identical in structure for each field.\\
+This is a problem because this code is more difficult to refactor than
+when the functionality is properly factored out. Therefore, one
+possible fix is to rewrite the code to something like:
+\begin{code}
+  private float clampInternal(float val) {
+    if (val < 0) {
+      val = 0;
+    } else if (val > 1) {
+      val = 1;
+    }
+  }
+
+  public void clamp() {
+    this.r = clampInternal(this.r);
+    this.g = clampInternal(this.g);
+    this.b = clampInternal(this.b);
+    this.a = clampInternal(this.a);
+  }
+\end{code}
 
 \subsection{Other class and package design violations}
 \label{sec:other_violations}
