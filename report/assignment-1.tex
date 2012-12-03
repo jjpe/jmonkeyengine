@@ -549,6 +549,17 @@ and apply it to a Geometry and render it
 % one example of an Open/Closed Principle violation or 
 % a Liskov substitution Principle violation
 
+The enum \verb|com.jme3.shader.VarType| and the class
+\verb|com.jme3.material.MatParam| violate the Open/Closed
+Principle. \verb|MatParam.getValueAsString()| uses a switch-case to
+check for certain ``types'', which are encoded as a field within
+\verb|MatParam|. The type of the field is \verb|VarType|.
+The problem with this aproach is that both the list of types in the
+switch-case and the list of enums within
+\verb|com.jme3.shader.VarType| is finite, so when a new ``type'' is
+created the existing code has to be modified not in 1 but in at least
+2 places.
+
 
 \subsection{Dependency Inversion Principle violation}
 \label{sec:dip_violation}
