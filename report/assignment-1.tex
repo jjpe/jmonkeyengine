@@ -451,7 +451,7 @@ though we have also considered the ADP and DRY principles.
 \subsection{Single Responsibility violation}
 \label{sec:srp_violation}
 % 2 examples of an Single Responsibility Principle violation
-
+\subsubsection{JmeSystem}
 JmeSystem seems to have too much responsibilities.
 The lack of comments makes it hard to say anything about what 
 the intended responsibility is, but it seems to be:
@@ -480,7 +480,7 @@ from the abstract JmeSystemDelegate,
 which has an LCOM4 of 2,
 and its subtype JmeDesktopSystem also has an LCOM4 of 2.
 
-Inspection of the afferent coupling of JmeSystem 
+Inspection of some of the afferent couplings of JmeSystem 
 leads to the following usage table, 
 illustrating how breaking up the class will result in 
 less coupling.
@@ -503,6 +503,45 @@ storage folder	& SaveGame\\\hline
 		& ScreenshotAppState\\\hline
 platform	& LwjglCanvas\\\hline
 \end{tabular}
+
+\subsubsection{Material}
+Material is quite an exceptional entity,
+with an efferent coupling of 42,
+697 lines of code,
+using 77 accessors or attributes of 24 unrelated classes,
+having a complexity of 193 according to Sonar's check, and
+triggering all four lack of cohesion of methods indicators of Eclipse Metrics.
+
+\begin{figure}[htb!]
+\centering
+\includegraphics[width=\textwidth]{figures/material-sonar.png}
+\vspace{-20pt}
+\caption{some Sonar metrics for Material}
+\label{fig:material-sonar}
+\end{figure}
+\vspace{-20pt}
+\begin{figure}[htb!]
+\centering
+\includegraphics[width=70mm]{figures/material-metrics.png}
+\vspace{-10pt}
+\caption{some Eclipse Metrics results for Material}
+\label{fig:material-metrics}
+\end{figure}
+
+It has gotten so big, complex and coupled that it is hard to 
+figure out what it is doing, and even harder to believe
+it is a single responsibility.
+According to the javadoc comments, 
+it has the following responsibility:
+Material describes the rendering style for a given Geometry.
+However, a Material is not specific for a given Geometry.
+Nor is it purely a collection of parameters to configure
+the style of rendering.
+We think the real responsibilities of Material are:
+describe a rendering style 
+(MatParam, RenderState, Technique, transparent, receiveShadows),
+and apply it to a Geometry and render it
+(updateLightListUniforms, preload, render).
 
 \subsection{Open-Closed Principle / Liskov Substitution Principle violation}
 \label{sec:lsp_violation} % TODO if we choose OCP instead this should
@@ -664,6 +703,10 @@ Below is a list of the analysis and refactoring tools we used.
 \item \textbf{Sonar}
 	is a tool which entails several code checking tools like PMD and FindBugs. It also checks for metrics like complexity, code duplicates and coupling.
 	The findings are easily browsable via the Sonar server.
+\item \textbf{Eclipse Metrics} is and eclipse plugin 
+	that checks for a collection of metrics.
+	It places markers at the source code, but can also
+	export its findings to a browsable HTML format.
 \end{enumerate}
 
 % \subsection{Dynamic analysis}
