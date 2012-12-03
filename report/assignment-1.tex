@@ -417,6 +417,38 @@ though we have also considered the ADP and DRY principles.
 \label{sec:srp_violation}
 % 2 examples of an Single Responsibility Principle violation
 
+JmeSystemDelegate seems to have too much responsibilities.
+The lack of comments makes it hard to say anything about what 
+the intended responsibility is, but it seems to be:
+Manage permissions related to IO 
+(lowPermissions, getStorageFolder),
+do image IO (writeImageFile),
+manage system dependent data (is64bit, getPlatform),
+manage screen dialogs 
+(setSoftTextDialogInput, showErrorDialog) and
+serve as a factory for system related managing classes 
+(newAssetManager, newAudioRenderer, createImageRaster).
+
+There is clearly too much responsibility here, 
+which is indicated by Sonar's LCOM4 metric.
+This metric groups methods based on common attributes.
+If there are two or more disjoint groups, 
+there is a lack of cohesion between the methods of a class.
+Usually, this is an indicator that there are two or more 
+responsibilities for the class.
+
+The abstract JmeSystemDelegate has an LCOM4 of 2,
+and its subtype JmeDesktopSystem also has an LCOM4 of 2.
+Abstract methods and loggers shared in methods can throw off
+the LCOM4 measure, but it was still very apparent in this case.
+
+When any of these responsibilities require a change,
+the class will have to be altered.
+It is only used in the JmeSystem, so direct propagation of 
+these changes is limited, but JmeSystem is used in 21 places all 
+throughout the system.
+Therefore, if we split up this class in several entities with a
+single responsibility, we might not have to change as much.
 
 \subsection{Liskov Substitution Principle violation}
 \label{sec:lsp_violation} % TODO if we choose OCP instead this should
