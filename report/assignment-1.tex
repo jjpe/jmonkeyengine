@@ -22,7 +22,7 @@
 
 \title{Software Reengineering\\
        Assignment 1}
-\author{Joey Ezechiels (1338994) \and Volker Lanting (1513273)}
+\author{Joey Ezechi\"{e}ls (1338994) \and Volker Lanting (1513273)}
 
 % % Implement x.yy numbering scheme for subsections
 % % where yy is *always* a 2-digit number
@@ -96,8 +96,6 @@ most important:
 \subsection{Important source code entities}
 \label{sec:important_src_entities}
 % Which are the important source code entities?
-
-
 
 \begin{tabular}{| c | c |}
   \hline
@@ -179,7 +177,7 @@ a bit more difficult.
 % Do you think a reengineering is feasible?
 Reengineering is feasible, as the current design and quality really isn't bad.
 Also, since we don't have a specific goal for our reengineering 
-(like making it easier to add a specific feature), 
+(like making it easier to add a specific feature).
 
 
 % Volker
@@ -551,9 +549,9 @@ The packages \verb|com.jme3.material|, \verb|com.jme3.renderer| and
 
 \begin{wrapfigure}{l}{55mm}
 \includegraphics[width=200px, height=200px]{figures/adp-violation.png}
-\caption{An acyclic dependency violation. Red arrows represent method
-  invocations while their thickness represents the number of
-  invocations}
+\caption{An acyclic dependency principle violation. Red arrows
+  represent method invocations while their thickness represents the
+  number of invocations}
 \label{fig:adp-violation}
 \end{wrapfigure}
 
@@ -663,5 +661,37 @@ Below is a list of the analysis and refactoring tools we used.
 % \begin{enumerate}[i)]
 % \item \textbf{}
 % \end{enumerate}
+
+\section{Appendix A: Tables}
+The tables listed here contain more detailed information on the
+previous chapters.
+
+\begin{table}
+  \caption{Vla met pizza}
+\begin{tabular}{| c | c |}
+  \hline
+  \textbf{Feature}                  & \textbf{Important source entities} \\
+  \hline
+  \hline
+  Managing assets                   & AssetManager, ImplHandler, \\
+				    & Node, Mesh, Geometry, Spatial \\
+  \hline
+  Creating applications             & SimpleApplication \\
+  \hline
+  Managing/configuring applications & AppSettings, JmeSystem, \\
+                                    & JmeSystemDelegate, \\
+                                    & AbstractAppState, AppStateManager \\
+  \hline
+  Real time rendering               & RenderManager, Camera,  \\
+                                    & ViewPort, RenderQueue \\
+  \hline
+  Shaders                           & Shader, Uniform, \\
+                                    & UniformBindingManager \\
+  \hline
+  Collision Detection		    & CollisionResults, BoundingVolume\\
+  \hline
+\end{tabular}
+
+\end{table}
 
 \end{document}
