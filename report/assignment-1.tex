@@ -9,6 +9,7 @@
 \usepackage{hyperref}
 \usepackage{enumerate}
 \usepackage{multirow}
+\usepackage{wrapfig}
 
 \usepackage{fancyvrb}
 \DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\small}
@@ -485,6 +486,14 @@ platform	& LwjglCanvas\\\hline
 \subsection{Dependency Inversion Principle violation}
 \label{sec:dip_violation}
 % One example of a Dependency Inversion Principle violation
+\begin{wrapfigure}{r}{45mm}
+\includegraphics[width=40mm]{figures/dip-violation.png}
+\vspace{-15pt}
+\caption{A DIP violation}
+\label{fig:dip-violation}
+\vspace{-60pt}
+\end{wrapfigure}
+
 The layer for rendering should be a higher layer than the
 layer with materials.
 Therefore, the dependency inversion principle requires
@@ -493,10 +502,15 @@ in the renderer layer.
 However, in the current system the \verb|com.jme3.renderer| package 
 depends on the \verb|com.jme3.material| package.
 Or more specific: the RenderManager uses the Material class directly.
+As can be seen in 
+\hyperref[fig:dip-violation]{Figure~\ref*{fig:dip-violation}}.
 
 This means that changes to the Material class will propagate
 to the RenderManager and it is not easy to replace the current
 implementation of Material.
+
+% extra space to stop wrapping arounf the figure
+\vspace{45pt}
 
 \subsection{Acyclic Dependency Principle violation}
 \label{sec:adp_violation}
