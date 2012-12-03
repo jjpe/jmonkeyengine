@@ -22,7 +22,7 @@
 
 \title{Software Reengineering\\
        Assignment 1}
-\author{Joey Ezechiels (1338994) \and Volker Lanting (1513273)}
+\author{Joey Ezechi\"{e}ls (1338994) \and Volker Lanting (1513273)}
 
 % % Implement x.yy numbering scheme for subsections
 % % where yy is *always* a 2-digit number
@@ -97,8 +97,6 @@ most important:
 \label{sec:important_src_entities}
 % Which are the important source code entities?
 
-
-
 \begin{tabular}{| c | c |}
   \hline
   \textbf{Feature}                  & \textbf{Important source entities} \\
@@ -144,12 +142,42 @@ Therefore we will skip them for this project.
 % - There is a tradeof between speed and design,
 %   epecially in the com.jme3.math package
 
+Our first impressions are that generally the package structure is
+well-defined and the code itself uses a lot of interfaces, which
+generally is a good sign (though of course not a conclusive indicator
+of good design).
+
+However there are also some odd design decisions (e.g. an inner enum in a
+class that is referenced from a class in another package) design
+violations (perhaps due to organic growth of the code base), and the
+code base also shows signs that a tradeoff between execution speed and
+design has been made, particularly in the \verb|com.jme3.math| package.
+
+Generally the documentation seems fairly good and up to date
+(e.g. there is a slide show on the website explaining how Scene Graphs
+work in JME3). However in some parts of the code itself there seems to
+be lack of comments, which would be helpful especially in the more
+obscure parts of the code base.
+
+Counting in absolute numbers, there is a fairly large set of tests.
+However it interesting and somewhat disappointing that for the
+entities we consider major there are almost no tests. For example,
+the \verb|com.jme3test.math| and \verb|com.jme3test.scene| packages
+contain only \textbf{1} and \textbf{2} tests, respectively.
+Next to that it is quite surprising that the test packages are
+different from the src packages (i.e. \verb|com.jme3test.math| is used
+for tests rather than \verb|com.jme3.math|). While it is possible that
+there are some considerations we don't know about, we consider it a
+rather dumb decision as it makes testing package-private classes quite
+a bit more difficult.
+
+
 \subsection{Reengineering feasibility}
 \label{sec:reengineering_feasibility}
 % Do you think a reengineering is feasible?
 Reengineering is feasible, as the current design and quality really isn't bad.
 Also, since we don't have a specific goal for our reengineering 
-(like making it easier to add a specific feature), 
+(like making it easier to add a specific feature).
 
 
 % Volker
@@ -555,12 +583,34 @@ implementation of Material.
 \label{sec:adp_violation}
 % One example of an Acyclic Dependency Principle violation
 
-The packages \verb|com.jme3.scene|, \verb|com.jme3.scene| and
-\verb|com.jme3.renderer| together violate the ADP on the package
-level:\\
-\includegraphics[scale=0.5]{figures/adp-violation.png}
+The packages \verb|com.jme3.material|, \verb|com.jme3.renderer| and
+\verb|com.jme3.scene| together violate the ADP on the package level:
 
+\begin{wrapfigure}{l}{55mm}
+\includegraphics[width=200px, height=200px]{figures/adp-violation.png}
+\caption{An acyclic dependency principle violation. Red arrows
+  represent method invocations while their thickness represents the
+  number of invocations}
+\label{fig:adp-violation}
+\end{wrapfigure}
 
+They call each other's methods: In one direction (the 3 packages
+actually form 2 cycles), \textbf{26} methods contained in classes in
+\verb|com.jme3.material| are invoking methods in classes in
+\verb|com.jme3.renderer|, \textbf{33} methods in classes in
+\verb|com.jme3.renderer| are calling methods contained in classes in
+\verb|com.jme3.scene| and \textbf{4} methods contained in classes in
+\verb|com.jme3.scene| are calling methods contained in classes in
+\verb|com.jme3.material|.
+
+The reason the ADP violation is a problem is that the packages become
+tightly coupled, which means that deployment becomes more difficult as
+now at least these 3 (and possibly more) packages cannot be
+independently deployed.
+Modifying the classes within these packages also becomes more
+difficult as there is no coherent interface to the subsystems the
+packages represent while at the same time the consequences of these
+modifications become harder to predict.\\
 
 \subsection{Don't Repeat Yourself violation}
 \label{sec:dry_violation}
@@ -622,9 +672,9 @@ w.r.t. structure.
 %   }
 % \end{code}
 
-\subsection{Other class and package design violations}
-\label{sec:other_violations}
-% This one is optional; If we have the time I recommend we do it - Joey
+% \subsection{Other class and package design violations}
+% \label{sec:other_violations}
+% % This one is optional; If we have the time I recommend we do it - Joey
 
 \newpage
 \section{Used tools}
@@ -650,5 +700,37 @@ Below is a list of the analysis and refactoring tools we used.
 % \begin{enumerate}[i)]
 % \item \textbf{}
 % \end{enumerate}
+
+\section{Appendix A: Tables}
+The tables listed here contain more detailed information on the
+previous chapters.
+
+\begin{table}
+  \caption{Vla met pizza}
+\begin{tabular}{| c | c |}
+  \hline
+  \textbf{Feature}                  & \textbf{Important source entities} \\
+  \hline
+  \hline
+  Managing assets                   & AssetManager, ImplHandler, \\
+				    & Node, Mesh, Geometry, Spatial \\
+  \hline
+  Creating applications             & SimpleApplication \\
+  \hline
+  Managing/configuring applications & AppSettings, JmeSystem, \\
+                                    & JmeSystemDelegate, \\
+                                    & AbstractAppState, AppStateManager \\
+  \hline
+  Real time rendering               & RenderManager, Camera,  \\
+                                    & ViewPort, RenderQueue \\
+  \hline
+  Shaders                           & Shader, Uniform, \\
+                                    & UniformBindingManager \\
+  \hline
+  Collision Detection		    & CollisionResults, BoundingVolume\\
+  \hline
+\end{tabular}
+
+\end{table}
 
 \end{document}
