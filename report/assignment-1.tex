@@ -485,7 +485,17 @@ platform	& LwjglCanvas\\\hline
 \subsection{Dependency Inversion Principle violation}
 \label{sec:dip_violation}
 % One example of a Dependency Inversion Principle violation
+The layer for rendering should be a higher layer than the
+layer with materials.
+Therefore, the dependency inversion principle requires
+the material layer to implement an interface of some sort
+in the renderer layer.
+However, in the current system the \verb|com.jme3.renderer| package 
+depends on the \verb|com.jme3.material| package.
 
+This means that changes to the Material class will propagate
+to the RenderManager and it is not easy to replace the current
+implementation of Material.
 
 \subsection{Acyclic Dependency Principle violation}
 \label{sec:adp_violation}
