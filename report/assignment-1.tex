@@ -543,22 +543,33 @@ describe a rendering style
 and apply it to a Geometry and render it
 (updateLightListUniforms, preload, render).
 
-\subsection{Open-Closed Principle / Liskov Substitution Principle violation}
+\subsection{Open-Closed Principle}% / Liskov Substitution Principle violation}
 \label{sec:lsp_violation} % TODO if we choose OCP instead this should
                           % be changed to sec:ocp_violation
 % one example of an Open/Closed Principle violation or 
 % a Liskov substitution Principle violation
 
-The enum \verb|com.jme3.shader.VarType| and the class
-\verb|com.jme3.material.MatParam| violate the Open/Closed
-Principle. \verb|MatParam.getValueAsString()| uses a switch-case to
-check for certain ``types'', which are encoded as a field within
-\verb|MatParam|. The type of the field is \verb|VarType|.
-The problem with this aproach is that both the list of types in the
-switch-case and the list of enums within
-\verb|com.jme3.shader.VarType| is finite, so when a new ``type'' is
-created the existing code has to be modified not in 1 but in at least
-2 places.
+Using Eclipse metrics we encountered the
+\verb|com.jme3.material.MatParam| class and in particular its method
+\verb|MatParam.getValueAsString()|, which has a cyclomatic complexity
+of \textbf{19}, consists of \textbf{124} SLOC and yet has only
+\textbf{60} statements. These odd numbers led us to investigate the
+class.
+
+We found that the enum \verb|com.jme3.material.MatParam| and the class\\
+\verb|com.jme3.shader.VarType| violate the Open/Closed Principle.\\
+\verb|MatParam.getValueAsString()| uses a switch-case to check for
+certain ``types'', which are encoded as a field within
+\verb|MatParam|. The type of the field is \verb|VarType|. The problem
+with this aproach is that both the list of types in the switch-case
+and the list of enums within \verb|com.jme3.shader.VarType| is
+explicit and finite, so when a new ``type'' is created the existing
+code has to be modified not in 1 but in at least 2 places at once in
+order to stay in sync.
+
+% cyclomatic complexity: 19
+% SLOC: 124
+% no of statements: 60
 
 
 \subsection{Dependency Inversion Principle violation}
