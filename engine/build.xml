@@ -559,7 +559,12 @@
 <property name="sonar.jdbc.url" value="jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;characterEncoding=utf8" />
 <property name="sonar.jdbc.username" value="sonar" />
 <property name="sonar.jdbc.password" value="sonar" />
- 
+<property name="sonar.dynamicAnalysis" value="reuseReports" />
+<!--
+<property name="sonar.surefire.reportsPath" value="[baseDir]/myReports/myExecutionReports" />
+<property name="sonar.clover.reportPath" value="[baseDir]/myReports/myCodeCoverageReport" /> 
+-->
+
 <!-- Define the Sonar project properties -->
 <property name="sonar.projectKey" value="com.jme3:jmonkey-engine-core" />
 <property name="sonar.projectName" value="The jMonkey engine core" />
