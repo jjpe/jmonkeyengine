@@ -5,11 +5,19 @@ engine/.project
 engine/bin
 
 report/.DS_Store
-report/assignment-1-blx.bib
-report/assignment-1.aux
-report/assignment-1.log
-report/assignment-1.out
-report/assignment-1.pdf
-report/assignment-1.run.xml
-report/assignment-1.toc
-report/auto/
+report-phase1/assignment-1-blx.bib
+report-phase1/assignment-1.aux
+report-phase1/assignment-1.log
+report-phase1/assignment-1.out
+report-phase1/assignment-1.pdf
+report-phase1/assignment-1.run.xml
+report-phase1/assignment-1.toc
+report-phase1/auto/
+report-phase2/assignment-2-blx.bib
+report-phase2/assignment-2.aux
+report-phase2/assignment-2.log
+report-phase2/assignment-2.out
+report-phase2/assignment-2.pdf
+report-phase2/assignment-2.run.xml
+report-phase2/assignment-2.toc
+report-phase2/auto/
