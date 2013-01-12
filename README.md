@@ -69,6 +69,9 @@ Go to the `Libraries` tab.
 Locate and select `android`.    
 Click `remove`.
 
+We used the same process to add the android library and source folder again.
+After removing, saving and adding it again, eclipse was able to function properly without the weird errors.
+
 ### Flippendo...eh... Fluendo!
 In `src/jheora` there are a bunch of references to some `come.fluendo` package which is not included in the lib folder.
 The `src/jheora` sub-project seems unused in the `build.xml` files, so I'm guessing this is deprecated or something.
@@ -87,7 +90,10 @@ http://marketplace.eclipse.org/content/findbugs-eclipse-plugin
 http://marketplace.eclipse.org/content/sonar
 ## Metrics
 http://marketplace.eclipse.org/content/eclipse-metrics
-## Clover
-http://marketplace.eclipse.org/content/atlassian-clover-eclipse
+## EclEmma
+http://marketplace.eclipse.org/content/eclemma-java-code-coverage
+
+After installing EclEmma, a run launcher appears to the left of the standard debug launcher.
+Just use that to run your testcases and watch the coverage appear.
 ## TPTP
 Generates UML sequence diagrams from Java source code
