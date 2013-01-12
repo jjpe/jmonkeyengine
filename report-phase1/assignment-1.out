@@ -1,0 +1,19 @@
+\BOOKMARK [1][-]{section.1}{Initial Questions}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Main features of the program}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{Important source code entities}{section.1}% 3
+\BOOKMARK [2][-]{subsection.1.3}{Quality, Design and Implementation:First impressions}{section.1}% 4
+\BOOKMARK [2][-]{subsection.1.4}{Reengineering feasibility}{section.1}% 5
+\BOOKMARK [2][-]{subsection.1.5}{Exceptional entities}{section.1}% 6
+\BOOKMARK [2][-]{subsection.1.6}{Inheritance structure}{section.1}% 7
+\BOOKMARK [2][-]{subsection.1.7}{Scene composition: Basic elements}{section.1}% 8
+\BOOKMARK [2][-]{subsection.1.8}{Scene rendering}{section.1}% 9
+\BOOKMARK [2][-]{subsection.1.9}{Collision detection}{section.1}% 10
+\BOOKMARK [1][-]{section.2}{Problem detection}{}% 11
+\BOOKMARK [2][-]{subsection.2.1}{Single Responsibility violation}{section.2}% 12
+\BOOKMARK [3][-]{subsubsection.2.1.1}{JmeSystem}{subsection.2.1}% 13
+\BOOKMARK [3][-]{subsubsection.2.1.2}{Material}{subsection.2.1}% 14
+\BOOKMARK [2][-]{subsection.2.2}{Open-Closed Principle violation}{section.2}% 15
+\BOOKMARK [2][-]{subsection.2.3}{Dependency Inversion Principle violation}{section.2}% 16
+\BOOKMARK [2][-]{subsection.2.4}{Acyclic Dependency Principle violation}{section.2}% 17
+\BOOKMARK [2][-]{subsection.2.5}{Don't Repeat Yourself violation}{section.2}% 18
+\BOOKMARK [1][-]{section.3}{Used tools}{}% 19
