@@ -62,12 +62,12 @@ public class JmeSystemTest {
 			@SuppressWarnings("unused")
 			@Mock(minInvocations=1)
 			public void log(Level level, String message) {
-				Assert.assertEquals("The jmeSystem should have logged the absense of a delegate", 
+				Assert.assertEquals("The jmeSystem should have logged the absence of a delegate", 
 						"Failed to find a JmeSystem delegate!\n"
                                 + "Ensure either desktop or android jME3 jar is in the classpath.",
                         message
 						);
-				Assert.assertEquals("The JmeSystem should have logged the absense of a delegate with SEVERE level",
+				Assert.assertEquals("The JmeSystem should have logged the absence of a delegate with SEVERE level",
 						Level.SEVERE, level);
 				
 			}
@@ -427,7 +427,7 @@ public class JmeSystemTest {
  * A custom class loader, 
  * which will not load the classes specified by {@link MyLoader#setNotAllowed(String...)}.
  * 
- * It can be used to test the behavior of JmeSystem by mocking the absense of some JmeDelegates
+ * It can be used to test the behavior of JmeSystem by mocking the absence of some JmeDelegates
  * on the classpath.
  * 
  * @author Volker Lanting
