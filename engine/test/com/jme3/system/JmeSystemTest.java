@@ -245,17 +245,148 @@ public class JmeSystemTest {
 		invokeStatic(system,"getSoftTextDialogInput");
 	}
 	
-	class MockAndroidSystem extends MockUp<JmeAndroidSystem> {
-//		public void writeImageFile(OutputStream a,String b,ByteBuffer c,int d,int e){}
-//		AssetManager newAssetManager(URL a){return null;}
-//		AssetManager newAssetManager(){return null;}
-//		boolean showSettingsDialog(AppSettings a, boolean b){return true;}
-//		JmeContext newContext(AppSettings a, JmeContext.Type b){return null;}
-//		AudioRenderer newAudioRenderer(AppSettings a){return null;}
-//		void initialize(AppSettings a){}
-//		ImageRaster createImageRaster(Image a, int b){return null;}
-//		void showErrorDialog(String a){}
-		
+	/**
+	 * Checks if the Android delegate is implicitly loaded if it is the only
+	 * available delegate 
+	 * and writeImageFile is called.
+	 */
+	@Test
+	public void testImplictlyLoadAndroidOnWriteImageFile() throws Throwable {
+		new MockUp<JmeAndroidSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			void writeImageFile(OutputStream a,String b,ByteBuffer c,int d,int e){}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		invokeStatic(system,"writeImageFile",new Class[]{OutputStream.class,String.class,ByteBuffer.class,int.class,int.class},new Object[]{null,null,null,0,0});
+	}
+	
+	/**
+	 * Checks if the Android delegate is implicitly loaded if it is the only
+	 * available delegate 
+	 * and newAssetManager(URL) is called.
+	 */
+	@Test
+	public void testImplictlyLoadAndroidOnNewAssetManagerUrl() throws Throwable {
+		new MockUp<JmeAndroidSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			AssetManager newAssetManager(URL a){return null;}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		invokeStatic(system,"newAssetManager",new Class[]{URL.class},new Object[]{null});
+	}
+	
+	/**
+	 * Checks if the Android delegate is implicitly loaded if it is the only
+	 * available delegate 
+	 * and newAssetManager is called.
+	 */
+	@Test
+	public void testImplictlyLoadAndroidOnNewAssetManager() throws Throwable {
+		new MockUp<JmeAndroidSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			AssetManager newAssetManager(){return null;}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		invokeStatic(system,"newAssetManager");
+	}
+	
+	/**
+	 * Checks if the Android delegate is implicitly loaded if it is the only
+	 * available delegate 
+	 * and showSettingsDialog is called.
+	 */
+	@Test
+	public void testImplictlyLoadAndroidOnShowSettingsDialog() throws Throwable {
+		new MockUp<JmeAndroidSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			boolean showSettingsDialog(AppSettings a, boolean b){return true;}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		invokeStatic(system,"showSettingsDialog",new Class[]{AppSettings.class,boolean.class},new Object[]{null,false});
+	}
+	
+	/**
+	 * Checks if the Android delegate is implicitly loaded if it is the only
+	 * available delegate 
+	 * and newContext is called.
+	 */
+	@Test
+	public void testImplictlyLoadAndroidOnNewContext() throws Throwable {
+		new MockUp<JmeAndroidSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			JmeContext newContext(AppSettings a, JmeContext.Type b){return null;}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		invokeStatic(system,"newContext",new Class[]{AppSettings.class,JmeContext.Type.class},new Object[]{null,JmeContext.Type.Canvas});
+	}
+	
+	/**
+	 * Checks if the Android delegate is implicitly loaded if it is the only
+	 * available delegate 
+	 * and newAudioRenderer is called.
+	 */
+	@Test
+	public void testImplictlyLoadAndroidOnNewAudioRenderer() throws Throwable {
+		new MockUp<JmeAndroidSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			AudioRenderer newAudioRenderer(AppSettings a){return null;}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		invokeStatic(system,"newAudioRenderer",new Class[]{AppSettings.class},new Object[]{null});
+	}
+	
+	/**
+	 * Checks if the Android delegate is implicitly loaded if it is the only
+	 * available delegate 
+	 * and initialize is called.
+	 */
+	@Test
+	public void testImplictlyLoadAndroidOnInitialize() throws Throwable {
+		new MockUp<JmeAndroidSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			void initialize(AppSettings a){}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		invokeStatic(system,"initialize",new Class[]{AppSettings.class},new Object[]{null});
+	}
+	
+	/**
+	 * Checks if the Android delegate is implicitly loaded if it is the only
+	 * available delegate 
+	 * and createImageRaster is called.
+	 */
+	@Test
+	public void testImplictlyLoadAndroidOnCreateImageRaster() throws Throwable {
+		new MockUp<JmeAndroidSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			ImageRaster createImageRaster(Image a, int b){return null;}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		invokeStatic(system,"createImageRaster",new Class[]{Image.class,int.class},new Object[]{null,0});
+	}
+	
+	/**
+	 * Checks if the Android delegate is implicitly loaded if it is the only
+	 * available delegate 
+	 * and showErrorDialog is called.
+	 */
+	@Test
+	public void testImplictlyLoadAndroidOnShowErrorDialog() throws Throwable {
+		new MockUp<JmeAndroidSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			void showErrorDialog(String a){}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		invokeStatic(system,"showErrorDialog",new Class[]{String.class},new Object[]{null});
 	}
 	
 	private void invokeStatic(
