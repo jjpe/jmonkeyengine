@@ -4,22 +4,31 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.jme3.asset.AssetManager;
+import com.jme3.audio.AudioRenderer;
+import com.jme3.input.SoftTextDialogInput;
 import com.jme3.system.android.JmeAndroidSystem;
+import com.jme3.texture.Image;
+import com.jme3.texture.image.ImageRaster;
 
 public class JmeSystemTest {
 
@@ -44,26 +53,6 @@ public class JmeSystemTest {
 	}
 	
 	
-	
-	/**
-	 * Checks if an explicitly defined android JmeSystem behaves the same as
-	 * an implicit android JmeSystem, wrt the getPlatform method. 
-	 */
-	@Test
-	public void testAndroidDelegatePlatform() throws IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		JmeSystem.setSystemDelegate(new JmeAndroidSystem());
-		testPlatform(JmeAndroidSystem.class);
-	}
-	
-	/**
-	 * Checks if an explicitly defined desktop JmeSystem behaves the same as
-	 * an implicit desktop JmeSystem, wrt the getPlatform method. 
-	 */
-	@Test
-	public void testDesktopDelegatePlatform() throws IllegalArgumentException, SecurityException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-		JmeSystem.setSystemDelegate(new JmeDesktopSystem());
-		testPlatform(JmeDesktopSystem.class);
-	}
 	
 	/**
 	 * Checks if a JmeSystem with no delegate fails on its static, parameterless methods.
@@ -103,25 +92,185 @@ public class JmeSystemTest {
 	}
 	
 	
-	
-	private void testPlatform(Class<? extends JmeSystemDelegate> clazz)	throws IllegalArgumentException, SecurityException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-		Class<?> mySystem = new MyLoader(allDelegatesExcept(clazz)).getJmeSystem();
-		Platform p1 = null;
-		try {
-			p1 = JmeSystem.getPlatform(); 
-		} catch (Exception e) {
-			try {
-				mySystem.getMethod("getPlatform").invoke(null);
-			} catch (InvocationTargetException e2) {
-				Assert.assertEquals(
-						"The exception thrown by the explicit system was not matched by the implicit system.",
-						e.getClass(), e2.getCause().getClass());
-				return;
-			}
-			Assert.fail("JmeSystem.getPlatform was unsupported, the testversion didn't do the same.");
-		}
-		Assert.assertEquals(p1, mySystem.getMethod("getPlatform").invoke(null));
+	/**
+	 * Checks if the Android delegate is implicitly loaded if it is the only
+	 * available delegate and getPlatform is called.
+	 */
+	@Test
+	public void testImplictlyLoadAndroidOnGetPlatform() throws Throwable {
+		new MockUp<JmeAndroidSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			Platform getPlatform(){return null;}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		invokeStatic(system,"getPlatform");
 	}
+	
+	/**
+	 * Checks if the Android delegate is implicitly loaded if it is the only
+	 * available delegate and getStorageFolder is called.
+	 */
+	@Test
+	public void testImplictlyLoadAndroidOnGetStorageFolder() throws Throwable {
+		new MockUp<JmeAndroidSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			File getStorageFolder(){return null;}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		invokeStatic(system,"getStorageFolder");
+	}
+	
+	/**
+	 * Checks if the Android delegate is implicitly loaded if it is the only
+	 * available delegate and getFullName is called.
+	 */
+	@Test
+	public void testImplictlyLoadAndroidOnGetFullName() throws Throwable {
+		new MockUp<JmeAndroidSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			String getFullName(){return null;}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		invokeStatic(system,"getFullName");
+	}
+	
+	/**
+	 * Checks if the Android delegate is implicitly loaded if it is the only
+	 * available delegate and getResourceAsStream is called.
+	 */
+	@Test
+	public void testImplictlyLoadAndroidOnGetResourceAsStream() throws Throwable {
+		new MockUp<JmeAndroidSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			InputStream getResourceAsStream(String a){return null;}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		invokeStatic(system,"getResourceAsStream", new Class<?>[]{String.class}, new Object[]{null});
+	}
+	
+	/**
+	 * Checks if the Android delegate is implicitly loaded if it is the only
+	 * available delegate and getResource is called.
+	 */
+	@Test
+	public void testImplictlyLoadAndroidOnGetResource() throws Throwable {
+		new MockUp<JmeAndroidSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			URL getResource(String a){return null;}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		invokeStatic(system,"getResource", new Class<?>[]{String.class}, new Object[]{null});
+	}
+	
+	/**
+	 * Checks if the Android delegate is implicitly loaded if it is the only
+	 * available delegate and trackDirectMemory is called.
+	 */
+	@Test
+	public void testImplictlyLoadAndroidOnTrackDirectmemory() throws Throwable {
+		new MockUp<JmeAndroidSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			boolean trackDirectMemory(){return true;}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		invokeStatic(system,"trackDirectMemory");
+	}
+
+	/**
+	 * Checks if the Android delegate is implicitly loaded if it is the only
+	 * available delegate and setLowPermissions is called.
+	 */
+	@Test
+	public void testImplictlyLoadAndroidOnSetLowPermissions() throws Throwable {
+		new MockUp<JmeAndroidSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			void setLowPermissions(boolean a){}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		invokeStatic(system,"setLowPermissions",new Class<?>[]{boolean.class},new Object[]{true});
+	}
+	
+	/**
+	 * Checks if the Android delegate is implicitly loaded if it is the only
+	 * available delegate 
+	 * and isLowPermissions is called.
+	 */
+	@Test
+	public void testImplictlyLoadAndroidOnIsLowPermissions() throws Throwable {
+		new MockUp<JmeAndroidSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			boolean isLowPermissions(){return true;}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		invokeStatic(system,"isLowPermissions");
+	}
+	
+	/**
+	 * Checks if the Android delegate is implicitly loaded if it is the only
+	 * available delegate 
+	 * and {@link JmeAndroidSystem#setSoftTextDialogInput(SoftTextDialogInput)} is called.
+	 */
+	@Test
+	public void testImplictlyLoadAndroidOnSetSoftTextDialogInput() throws Throwable {
+		new MockUp<JmeAndroidSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			void setSoftTextDialogInput(SoftTextDialogInput a){}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		invokeStatic(system,"setSoftTextDialogInput",new Class<?>[]{SoftTextDialogInput.class},new Object[]{null});
+	}
+	
+	/**
+	 * Checks if the Android delegate is implicitly loaded if it is the only
+	 * available delegate 
+	 * and getSoftTextDialogInput is called.
+	 */
+	@Test
+	public void testImplictlyLoadAndroidOnGetSoftTextDialogInput() throws Throwable {
+		new MockUp<JmeAndroidSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			SoftTextDialogInput getSoftTextDialogInput(){return null;}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		invokeStatic(system,"getSoftTextDialogInput");
+	}
+	
+	class MockAndroidSystem extends MockUp<JmeAndroidSystem> {
+//		public void writeImageFile(OutputStream a,String b,ByteBuffer c,int d,int e){}
+//		AssetManager newAssetManager(URL a){return null;}
+//		AssetManager newAssetManager(){return null;}
+//		boolean showSettingsDialog(AppSettings a, boolean b){return true;}
+//		JmeContext newContext(AppSettings a, JmeContext.Type b){return null;}
+//		AudioRenderer newAudioRenderer(AppSettings a){return null;}
+//		void initialize(AppSettings a){}
+//		ImageRaster createImageRaster(Image a, int b){return null;}
+//		void showErrorDialog(String a){}
+		
+	}
+	
+	private void invokeStatic(
+			Class<?> system, 
+			String methodName ) throws Throwable {
+		invokeStatic(system, methodName, new Class[0], new Object[0]);
+	}
+	private void invokeStatic(
+			Class<?> system, 
+			String methodName, 
+			Class<?>[] paramClasses, 
+			Object[] params) throws Throwable {
+		system.getMethod(methodName, paramClasses).invoke(null, params);
+	}
+	
 }
 
 /**
