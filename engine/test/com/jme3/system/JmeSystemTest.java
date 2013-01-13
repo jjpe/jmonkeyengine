@@ -72,7 +72,7 @@ public class JmeSystemTest {
 				
 			}
 		};
-		Class<?> system = new MyLoader(DELEGATES).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(DELEGATES).customLoadClass(JmeSystem.class);
 		for (Method method : system.getMethods()) {
 			if (method.getParameterTypes().length == 0 
 					&& Modifier.isStatic(method.getModifiers())) {
@@ -102,7 +102,7 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			Platform getPlatform(){return null;}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"getPlatform");
 	}
 	
@@ -117,7 +117,7 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			File getStorageFolder(){return null;}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"getStorageFolder");
 	}
 	
@@ -132,7 +132,7 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			String getFullName(){return null;}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"getFullName");
 	}
 	
@@ -147,7 +147,7 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			InputStream getResourceAsStream(String a){return null;}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"getResourceAsStream", new Class<?>[]{String.class}, new Object[]{null});
 	}
 	
@@ -162,7 +162,7 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			URL getResource(String a){return null;}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"getResource", new Class<?>[]{String.class}, new Object[]{null});
 	}
 	
@@ -177,7 +177,7 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			boolean trackDirectMemory(){return true;}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"trackDirectMemory");
 	}
 
@@ -192,7 +192,7 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			void setLowPermissions(boolean a){}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"setLowPermissions",new Class<?>[]{boolean.class},new Object[]{true});
 	}
 	
@@ -208,7 +208,7 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			boolean isLowPermissions(){return true;}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"isLowPermissions");
 	}
 	
@@ -224,7 +224,7 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			void setSoftTextDialogInput(SoftTextDialogInput a){}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"setSoftTextDialogInput",new Class<?>[]{SoftTextDialogInput.class},new Object[]{null});
 	}
 	
@@ -240,7 +240,7 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			SoftTextDialogInput getSoftTextDialogInput(){return null;}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"getSoftTextDialogInput");
 	}
 	
@@ -256,7 +256,7 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			void writeImageFile(OutputStream a,String b,ByteBuffer c,int d,int e){}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"writeImageFile",new Class[]{OutputStream.class,String.class,ByteBuffer.class,int.class,int.class},new Object[]{null,null,null,0,0});
 	}
 	
@@ -272,7 +272,7 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			AssetManager newAssetManager(URL a){return null;}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"newAssetManager",new Class[]{URL.class},new Object[]{null});
 	}
 	
@@ -288,7 +288,7 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			AssetManager newAssetManager(){return null;}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"newAssetManager");
 	}
 	
@@ -304,7 +304,7 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			boolean showSettingsDialog(AppSettings a, boolean b){return true;}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"showSettingsDialog",new Class[]{AppSettings.class,boolean.class},new Object[]{null,false});
 	}
 	
@@ -320,7 +320,7 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			JmeContext newContext(AppSettings a, JmeContext.Type b){return null;}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"newContext",new Class[]{AppSettings.class,JmeContext.Type.class},new Object[]{null,JmeContext.Type.Canvas});
 	}
 	
@@ -336,7 +336,7 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			AudioRenderer newAudioRenderer(AppSettings a){return null;}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"newAudioRenderer",new Class[]{AppSettings.class},new Object[]{null});
 	}
 	
@@ -352,7 +352,7 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			void initialize(AppSettings a){}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"initialize",new Class[]{AppSettings.class},new Object[]{null});
 	}
 	
@@ -368,7 +368,7 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			ImageRaster createImageRaster(Image a, int b){return null;}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"createImageRaster",new Class[]{Image.class,int.class},new Object[]{null,0});
 	}
 	
@@ -384,7 +384,7 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			void showErrorDialog(String a){}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeAndroidSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"showErrorDialog",new Class[]{String.class},new Object[]{null});
 	}
 	
@@ -417,68 +417,10 @@ public class JmeSystemTest {
 			@Mock(invocations=1)
 			Platform getPlatform(){return null;}
 		};
-		Class<?> system = new MyLoader(allDelegatesExcept(JmeDesktopSystem.class)).getJmeSystem();
+		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeDesktopSystem.class)).customLoadClass(JmeSystem.class);
 		invokeStatic(system,"getPlatform");
 	}
 	
 }
 
-/**
- * A custom class loader, 
- * which will not load the classes specified by {@link MyLoader#setNotAllowed(String...)}.
- * 
- * It can be used to test the behavior of JmeSystem by mocking the absence of some JmeDelegates
- * on the classpath.
- * 
- * @author Volker Lanting
- *
- */
-class MyLoader extends ClassLoader {
-	private String[] notAllowed = new String[0];
-	public void setNotAllowed(String... nonAllowedClassNames) {
-		notAllowed = nonAllowedClassNames;
-	}
-	public String[] getNotAllowed() {
-		return notAllowed;
-	}
-	
-	public MyLoader(){}
-	public MyLoader(String... notAllowed) {setNotAllowed(notAllowed);}
-	
-	@Override
-	public Class<?> loadClass(String name) throws ClassNotFoundException {
-		for (String s : notAllowed) {
-			if (name.equals(s)) {
-				throw new ClassNotFoundException("Loading this class is not allowed for testing purposes.");
-			}
-		}
-		return super.loadClass(name);
-	}
-	
-	/**
-	 * Returns a new Class definition of JmeSystem.
-	 * Note that it is no ordinary JmeSystem, so you can not cast to one.
-	 * @return a new JmeSystem, with this ClassLoader as ClassLoader.
-	 */
-	public Class<?> getJmeSystem() {
-		try {
-			Class<?> c = super.loadClass(JmeSystem.class.getName());
-			URL classFile = c.getResource(JmeSystem.class.getSimpleName()+".class");
-			FileInputStream fis = new FileInputStream(new File(classFile.toURI()));
-			byte[] classContents = new byte[fis.available()];
-			fis.read(classContents);
-			fis.close();
-			return defineClass(JmeSystem.class.getName(), classContents, 0, classContents.length);
-		} catch (FileNotFoundException e) {
-			Assert.fail("Couldn't locate the classfile for JmeSystem: "+e.getMessage());
-		} catch (URISyntaxException e) {
-			Assert.fail("URL was not a proper URI: "+e.getMessage());
-		} catch (ClassNotFoundException e) {
-			Assert.fail("The JmeSystem class could not be found: "+e.getMessage());
-		} catch (IOException e) {
-			Assert.fail("Some IO error while reading the class file: "+e.getMessage());
-		}
-		
-		return null;
-	}
-}
+

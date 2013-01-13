@@ -22,6 +22,15 @@ import com.jme3.system.JmeContext.Type;
 import com.jme3.texture.Image;
 import com.jme3.texture.image.ImageRaster;
 
+/**
+ * Test of the code of the {@link JmeSystemDelegate}.
+ * Note that it does not test the wanted behavior (as that is unknown to me),
+ * just the implemented behavior.
+ * 
+ * 
+ * @author Volker Lanting
+ *
+ */
 public class JmeSystemDelegateTest {
 
 	private static final String FILE_LOCATION = "test-data/System";
