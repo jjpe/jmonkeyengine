@@ -85,9 +85,10 @@ Click `remove`.
 ## JMockit
 We use JMockit for some tests.
 The jar is located in the engine/lib folder.
-It should be added to the classpath before the junit jars.
-Also, when using some JDKs (such as the openjdk) you need to add -javaagent:lib/jmockit.jar
-to the VM arguments when running test cases.
+It should be added to the java build path, on the Libraries tab, and
+also on the Order and Export tab, above the junit jars.
+Also, when using some JDKs (such as the openjdk) you need to add
+-javaagent:lib/jmockit.jar to the VM arguments when running test cases.
 
 # Installation of tools in Eclipse
 ## PMD
