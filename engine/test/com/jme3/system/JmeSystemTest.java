@@ -60,7 +60,7 @@ public class JmeSystemTest {
 	public void testNoDelegateFailures() throws Throwable {
 		new MockUp<Logger>() {
 			@SuppressWarnings("unused")
-			@Mock
+			@Mock(minInvocations=1)
 			public void log(Level level, String message) {
 				Assert.assertEquals("The jmeSystem should have logged the absense of a delegate", 
 						"Failed to find a JmeSystem delegate!\n"
