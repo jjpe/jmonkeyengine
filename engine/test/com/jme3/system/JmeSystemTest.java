@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
 
@@ -400,6 +399,26 @@ public class JmeSystemTest {
 			Class<?>[] paramClasses, 
 			Object[] params) throws Throwable {
 		system.getMethod(methodName, paramClasses).invoke(null, params);
+	}
+	
+	
+	/**
+	 * Checks if the Desktop delegate is implicitly loaded if it is the only
+	 * available delegate and getPlatform is called.
+	 * 
+	 * Note: we assume/hope that if this works for getPlatform it also works for the other methods
+	 * that were tested for the android system.
+	 * This saves a lot of test cases.
+	 */
+	@Test
+	public void testImplictlyLoadDesktopOnGetPlatform() throws Throwable {
+		new MockUp<JmeDesktopSystem>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			Platform getPlatform(){return null;}
+		};
+		Class<?> system = new MyLoader(allDelegatesExcept(JmeDesktopSystem.class)).getJmeSystem();
+		invokeStatic(system,"getPlatform");
 	}
 	
 }
