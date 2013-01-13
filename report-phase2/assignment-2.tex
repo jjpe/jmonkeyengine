@@ -49,16 +49,27 @@
 % \newpage
 \section{Elected reengineerings}
 \label{sec:elected_reengineerings}
-
+We have chosen to reengineer the following parts of the JME3 core code
+base:
+\begin{enumerate}
+\item \textbf{JmeSystem}.
+\end{enumerate}
 
 % \newpage
 \section{Motivation}
-
+The reason we have chosen the various parts of the codebase (see
+section \ref{sec:elected_reengineerings}) are as follows:
+\begin{enumerate}
+\item \textbf{JmeSystem} was chosen because it's not too large, it's
+  a good example of a S.O.L.I.D. SRP violation and it doesn't have too
+  many incoming dependencies, meaning pre-refactoring testability is
+  higher than with e.g. god classes.
+\end{enumerate}
 
 
 % \newpage
 \section{Feasibility}
-
+Given the scope of the refactorings
 
 % \newpage
 \section{Before}
