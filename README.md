@@ -81,6 +81,14 @@ Go to `Properties -> Java Build Path`.
 Locate and select `<your-project-name>/src/jheora` in the list of source folders.    
 Click `remove`.    
 
+# Installation of test libraries
+## JMockit
+We use JMockit for some tests.
+The jar is located in the engine/lib folder.
+It should be added to the classpath before the junit jars.
+Also, when using some JDKs (such as the openjdk) you need to add -javaagent:lib/jmockit.jar
+to the VM arguments when running test cases.
+
 # Installation of tools in Eclipse
 ## PMD
 http://marketplace.eclipse.org/content/pmd-eclipse?mpc=true&mpc_state=

@@ -1,24 +1,25 @@
 package com.jme3.system;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import mockit.Mock;
+import mockit.MockUp;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.jme3.input.SoftTextDialogInput;
 import com.jme3.system.android.JmeAndroidSystem;
-import com.jme3.system.android.OGLESContext;
-import com.jme3.texture.FrameBuffer;
 
 public class JmeSystemTest {
 
@@ -27,7 +28,6 @@ public class JmeSystemTest {
 		JmeAndroidSystem.class.getName()
 	};
 
-	private static final String NON_EXISTENT_RESOURCE = "MyNonExistentResourceIndicator";
 	
 	/**
 	 * Returns all delegates from {@link #DELEGATES},
@@ -65,130 +65,42 @@ public class JmeSystemTest {
 		testPlatform(JmeDesktopSystem.class);
 	}
 	
-	@Test(expected = NullPointerException.class)
-	public void testNoDelegatePlatform() throws Throwable {
-		testNoDelegateMethod("getPlatform");
-	}
-	
-	@Test(expected = NullPointerException.class)
-	public void testNoDelegateStorageFolder() throws Throwable {
-		testNoDelegateMethod("getStorageFolder");
-	}
-	
-	@Test(expected = NullPointerException.class)
-	public void testNoDelegateFullName() throws Throwable {
-		testNoDelegateMethod("getFullName");
-	}
-	
-	@Test(expected = NullPointerException.class)
-	public void testNoDelegateTrackMemory() throws Throwable {
-		testNoDelegateMethod("trackDirectMemory");
-	}
-	
-	@Test(expected = NullPointerException.class)
-	public void testNoDelegatePerms() throws Throwable {
-		testNoDelegateMethod("isLowPermissions");
-	}
-	
-	@Test(expected = NullPointerException.class)
-	public void testNoDelegateDialogInput() throws Throwable {
-		testNoDelegateMethod("getSoftTextDialogInput");
-	}
-	
-	@Test(expected = NullPointerException.class)
-	public void testNoDelegateAssetManager() throws Throwable {
-		testNoDelegateMethod("newAssetManager");
-	}
-	
-	@Test(expected = NullPointerException.class)
-	public void testNoDelegateResourceStream() throws Throwable {
-		testNoDelegateMethod("getResourceAsStream", new Param(NON_EXISTENT_RESOURCE, String.class));
-	}
-	
-	@Test(expected = NullPointerException.class)
-	public void testNoDelegateResource() throws Throwable {
-		testNoDelegateMethod("getResource", new Param(NON_EXISTENT_RESOURCE, String.class));
-	}
-	
-	@Test(expected = NullPointerException.class)
-	public void testNoDelegateSetPerms() throws Throwable {
-		testNoDelegateMethod("setLowPermissions", new Param(true, boolean.class));
-	}
-	
-	@Test(expected = NullPointerException.class)
-	public void testNoDelegateSetDialogInput() throws Throwable {
-		testNoDelegateMethod("setSoftTextDialogInput", new Param(new OGLESContext(), SoftTextDialogInput.class));
-	}
-	
-	// FIXME use mocking instead of null for the Buffer and Stream
-	@Test(expected = NullPointerException.class)
-	public void testNoDelegateWriteImage() throws Throwable {
-		testNoDelegateMethod(
-				"writeImageFile", 
-				new Param(null, OutputStream.class),
-				new Param("jpg", String.class),
-				new Param(null, ByteBuffer.class),
-				new Param(10, int.class),
-				new Param(25, int.class)
-				);
-	}
-	
-//	@Test(expected = NullPointerException.class)
-//	public void testNoDelegateAssetManagerURL() throws Throwable {
-//		testNoDelegateMethod("newAssetManager");
-//	}
-//	
-//	@Test(expected = NullPointerException.class)
-//	public void testNoDelegateSettings() throws Throwable {
-//		testNoDelegateMethod("showSettingsDialog");
-//	}
-//	
-//	@Test(expected = NullPointerException.class)
-//	public void testNoDelegateContext() throws Throwable {
-//		testNoDelegateMethod("newContext");
-//	}
-//	
-//	@Test(expected = NullPointerException.class)
-//	public void testNoDelegateAudioRenderer() throws Throwable {
-//		testNoDelegateMethod("newAudioRenderer");
-//	}
-//	
-//	@Test(expected = NullPointerException.class)
-//	public void testNoDelegateImageRaster() throws Throwable {
-//		testNoDelegateMethod("createImageRaster");
-//	}
-//	
-//	@Test(expected = NullPointerException.class)
-//	public void testNoDelegateErrorDialog() throws Throwable {
-//		testNoDelegateMethod("showErrorDialog");
-//	}
-//	
-//	@Test(expected = NullPointerException.class)
-//	public void testNoDelegateInit() throws Throwable {
-//		testNoDelegateMethod("initialize");
-//	}
-	
-	public void testNoDelegateMethod(String methodName, Param...params) throws Throwable {
+	/**
+	 * Checks if a JmeSystem with no delegate fails on its static, parameterless methods.
+	 */
+	@Test
+	public void testNoDelegateFailures() throws Throwable {
+		new MockUp<Logger>() {
+			@SuppressWarnings("unused")
+			@Mock
+			public void log(Level level, String message) {
+				Assert.assertEquals("The jmeSystem should have logged the absense of a delegate", 
+						"Failed to find a JmeSystem delegate!\n"
+                                + "Ensure either desktop or android jME3 jar is in the classpath.",
+                        message
+						);
+				Assert.assertEquals("The JmeSystem should have logged the absense of a delegate with SEVERE level",
+						Level.SEVERE, level);
+				
+			}
+		};
 		Class<?> system = new MyLoader(DELEGATES).getJmeSystem();
-		Class<?>[] paramClasses = new Class[params.length];
-		Object[] realParams = new Object[params.length];
-		for (int i = 0; i < params.length; i++) {
-			paramClasses[i] = params[i].requiredClass;
-			realParams[i] = params[i].paramObj;
-		}
-		try {
-			system.getMethod(methodName, paramClasses).invoke(null, realParams);
-		} catch (InvocationTargetException e) {
-			 throw e.getCause();
+		for (Method method : system.getMethods()) {
+			if (method.getParameterTypes().length == 0 
+					&& Modifier.isStatic(method.getModifiers())) {
+				try {
+					method.invoke(null);
+				} catch (InvocationTargetException e) {
+					Assert.assertEquals(
+							"A system without a delegate should throw an NPE, but it didnt for the method "+method.getName(),
+							NullPointerException.class, 
+							e.getCause().getClass());
+					continue;
+				}
+				Assert.fail("Method "+method.getName()+" did not throw an NPE.");
+			}
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -250,16 +162,14 @@ class MyLoader extends ClassLoader {
 	 * @return a new JmeSystem, with this ClassLoader as ClassLoader.
 	 */
 	public Class<?> getJmeSystem() {
-		String name = JmeSystem.class.getName();
-		String simpleName = JmeSystem.class.getSimpleName();
 		try {
-			Class<?> c = super.loadClass(name);
-			URL classFile = c.getResource(simpleName+".class");
+			Class<?> c = super.loadClass(JmeSystem.class.getName());
+			URL classFile = c.getResource(JmeSystem.class.getSimpleName()+".class");
 			FileInputStream fis = new FileInputStream(new File(classFile.toURI()));
 			byte[] classContents = new byte[fis.available()];
 			fis.read(classContents);
 			fis.close();
-			return defineClass(name, classContents, 0, classContents.length);
+			return defineClass(JmeSystem.class.getName(), classContents, 0, classContents.length);
 		} catch (FileNotFoundException e) {
 			Assert.fail("Couldn't locate the classfile for JmeSystem: "+e.getMessage());
 		} catch (URISyntaxException e) {
@@ -271,18 +181,5 @@ class MyLoader extends ClassLoader {
 		}
 		
 		return null;
-	}
-}
-
-/**
- * A Param is just a way to represent a parameter of a method.
- *
- */
-class Param {
-	public final Object paramObj;
-	public final Class<?> requiredClass;
-	public Param(Object param, Class<?> clazz) {
-		paramObj = param;
-		requiredClass = clazz;
 	}
 }
