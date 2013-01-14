@@ -25,6 +25,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.jme3.app.SettingsDialog;
+import com.jme3.app.SettingsDialog.SelectionListener;
+import com.jme3.asset.AssetNotFoundException;
 import com.jme3.asset.DesktopAssetManager;
 import com.jme3.audio.AudioRenderer;
 import com.jme3.audio.lwjgl.LwjglAudioRenderer;
@@ -411,6 +414,9 @@ public class JmeDesktopSystemTest {
 		delegate.showErrorDialog(msg);
 	}
 	
+	/**
+	 * Tests showSettingsDialog when the system is on an Event Dispatch Thread.
+	 */
 	@Test(expected=IllegalStateException.class)
 	public void testShowSettingsDialogOnEDT() {
 		new Expectations() {
@@ -423,9 +429,38 @@ public class JmeDesktopSystemTest {
 		delegate.showSettingsDialog(emptySettings, false);
 	}
 	
+	/**
+	 * Tests showSettingsDialog with a nonexistent icon.
+	 */
+	@Test(expected=AssetNotFoundException.class)
+	public void testShowSettingsDialogWithWrongIcon() {
+		AppSettings set = new AppSettings(false);
+		set.setSettingsDialogImage("com/jme3/system/derpy/shouldnt/be/there.pngxrs");
+		delegate.showSettingsDialog(set, false);
+	}
+	
+	/**
+	 * Tests showSettingsDialog with an absolute path to an icon.
+	 */
 	@Test
-	public void testShowSettingsDialog() {
-		System.out.println(JmeSystem.class.getResource("/."));
+	public void testShowSettingsDialogWithPrefixedIcon() {
+		AppSettings set = new AppSettings(false);
+		set.setSettingsDialogImage("com/jme3/system/Monkey.png");
+		new PreventSettingsDialog(SettingsDialog.APPROVE_SELECTION);
+		boolean accepted = delegate.showSettingsDialog(set, false);
+		Assert.assertTrue("The selection was not approved", accepted);
+	}
+	
+	/**
+	 * Tests showSettingsDialog with a relative path to an icon.
+	 */
+	@Test
+	public void testShowSettingsDialogWithoutPrefixedIcon() {
+		AppSettings set = new AppSettings(false);
+		set.setSettingsDialogImage("com/jme3/system/Monkey.png");
+		new PreventSettingsDialog(SettingsDialog.CANCEL_SELECTION);
+		boolean accepted = delegate.showSettingsDialog(set, false);
+		Assert.assertFalse("The selection was not canceled", accepted);
 	}
 	
 	
@@ -534,4 +569,30 @@ class MakeInvokeLaterImmediate extends MockUp<EventQueue> {
 	static void invokeLater(Runnable runnable) {
 		runnable.run();
 	}
+}
+
+/**
+ * Prevents the creation of all the UI elements and the showing of 
+ * the SettingsDialog.
+ * Allows testing without human interaction.
+ * 
+ * @author Volker Lanting
+ *
+ */
+class PreventSettingsDialog extends MockUp<SettingsDialog> {
+	private final int selection;
+	/**
+	 * @param selection use {@link SettingsDialog}'s constants.
+	 */
+	public PreventSettingsDialog(int selection) {
+		this.selection = selection;
+	}
+	@Mock(minInvocations=1)
+	public void $init(AppSettings settings, URL icon, boolean load) {/*prevent creation of UI*/}
+	@Mock
+	public void setSelectionListener(SelectionListener sl) {
+		sl.onSelection(selection);
+	}
+	@Mock
+	public void showDialog() {/*prevent the dialog from showing*/}
 }

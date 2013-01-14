@@ -22,11 +22,15 @@
 			<jvmarg value="-javaagent:lib/jmockit.jar"/>
 			
 			<classpath refid="tests.classpath"/>
+			<classpath path="${tests.data.lib}"/>
 			<formatter type="plain" usefile="false"/>
 			<batchtest>
 				<fileset dir="${tests.class.dir}" includes="**/*Test.class"/>
 			</batchtest>
 		</junit>
+		
+		<!-- EclEmma doesnt like double classes in the output directory -->
+		<delete dir="${tests.class.dir}"/>
 	</target>
 
 </project>

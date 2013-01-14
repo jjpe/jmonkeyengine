@@ -33,7 +33,7 @@ import com.jme3.texture.image.ImageRaster;
  */
 public class JmeSystemDelegateTest {
 
-	private static final String FILE_LOCATION = "test-data/System";
+	private static final String FILE_LOCATION = JmeSystem.class.getResource(".").getPath();
 	private static final String STORAGE_FOLDER = ".jme3";
 	private SystemDelegateTester delegate;
 	
