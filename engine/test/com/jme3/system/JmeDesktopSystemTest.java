@@ -1,7 +1,7 @@
 package com.jme3.system;
 
+import java.awt.EventQueue;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
@@ -14,7 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
+import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
 
@@ -29,6 +31,10 @@ import com.jme3.system.JmeContext.Type;
 import com.jme3.system.lwjgl.LwjglCanvas;
 import com.jme3.system.lwjgl.LwjglDisplay;
 import com.jme3.system.lwjgl.LwjglOffscreenBuffer;
+import com.jme3.texture.Image;
+import com.jme3.texture.Image.Format;
+import com.jme3.texture.image.DefaultImageRaster;
+import com.jme3.texture.image.ImageRaster;
 import com.jme3.util.BufferUtils;
 import com.jme3.util.Screenshots;
 
@@ -353,7 +359,56 @@ public class JmeDesktopSystemTest {
 		delegate.writeImageFile(os, format, buff, width, height);
 	}
 	
+	/**
+	 * Checks if createImageRaster creates a DefaultImageRaster with
+	 * correct pixels. 
+	 */
+	@Test
+	public void testCreateImageRaster() {
+		Image img = new Image();
+		int w = 5;
+		int h = 3;
+		img.setHeight(h);
+		img.setWidth(w);
+		img.setFormat(Format.RGBA8);
+		final ByteBuffer buff = BufferUtils.createByteBuffer(h*w*4);
+		int pixel00 = 0xFFF00F00;
+		int pixel21 = 0xAA996655;
+		// apparently putting the int as bytes reverses the byte order
+		buff.putInt(0, Integer.reverseBytes(pixel00));
+		buff.putInt(1*w*4+2*4, Integer.reverseBytes(pixel21));
+		img.setData(buff);
+		// select the buffer we gave
+		int slice = 0;
+		ImageRaster raster = delegate.createImageRaster(img, slice);
+		Assert.assertEquals("did not create a DefaultImageRaster",
+				DefaultImageRaster.class, raster.getClass());
+		Assert.assertEquals("pixel (0,0) wasnt represented properly in this raster",
+				pixel00, raster.getPixel(0, 0).asIntRGBA());
+		Assert.assertEquals("pixel (2,1) wasnt represented properly in this raster",
+				pixel21, raster.getPixel(2, 1).asIntRGBA());
+	}
 	
+	/**
+	 * Tests if showErrorMessageDialog shows a {@link JOptionPane#ERROR_MESSAGE}
+	 * with the proper message.
+	 */
+	@SuppressWarnings("static-access")
+	@Test
+	public void testShowErrorMessageDialog() {
+		final String msg = "Hello, I'm testing errors!";
+		// make the error message 'appear' immediately, or the test might end before it does.
+		new MakeInvokeLaterImmediate();
+		new Expectations() {
+			final JOptionPane mock = null;
+			{
+				mock.showMessageDialog(null, msg, (String) any, JOptionPane.ERROR_MESSAGE);
+				times=1;
+			}
+		};
+		
+		delegate.showErrorDialog(msg);
+	}
 	
 	
 	
@@ -454,5 +509,12 @@ class CheckDesktopAssetManagerConstructor extends MockUp<DesktopAssetManager> {
 	public void $init(URL u){
 		Assert.assertEquals("The config was not passed properly to the new AssetManager", 
 				expected, u);
+	}
+}
+
+class MakeInvokeLaterImmediate extends MockUp<EventQueue> {
+	@Mock
+	static void invokeLater(Runnable runnable) {
+		runnable.run();
 	}
 }
