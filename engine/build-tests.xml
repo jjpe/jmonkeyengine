@@ -1,0 +1,32 @@
+<project name="jMonkeyEngine3Tests" default="run-and-compile-tests" basedir=".">
+
+	<property name="tests.class.dir" value="bin/test"/>
+	<property name="tests.src.dir" value="test"/>
+
+	<path id="tests.classpath">
+		<pathelement location="bin"/>
+		<pathelement location="lib/junit_4/junit-4.5.jar"/>
+		<fileset dir="lib" includes="**/*.jar"/>
+	</path>
+
+	<target name="run-and-compile-tests">
+		
+		<mkdir dir="${tests.class.dir}"/>
+
+		<javac srcdir="${tests.src.dir}" destdir="${tests.class.dir}" includeantruntime="false"
+		    source="1.6" target="1.6" debug="true" nowarn="true" excludes="**/package-info.java">
+		 	<classpath refid="tests.classpath"/>
+		</javac>
+
+		<junit fork="yes" forkmode="once" haltonfailure="no">
+			<jvmarg value="-javaagent:lib/jmockit.jar"/>
+			
+			<classpath refid="tests.classpath"/>
+			<formatter type="plain" usefile="false"/>
+			<batchtest>
+				<fileset dir="${tests.class.dir}" includes="**/*Test.class"/>
+			</batchtest>
+		</junit>
+	</target>
+
+</project>

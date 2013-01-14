@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import mockit.Expectations;
 import mockit.Mock;
@@ -410,6 +411,22 @@ public class JmeDesktopSystemTest {
 		delegate.showErrorDialog(msg);
 	}
 	
+	@Test(expected=IllegalStateException.class)
+	public void testShowSettingsDialogOnEDT() {
+		new Expectations() {
+			@SuppressWarnings("unused")
+			final SwingUtilities util = null;
+			{
+				SwingUtilities.isEventDispatchThread(); result=true;
+			}
+		};
+		delegate.showSettingsDialog(emptySettings, false);
+	}
+	
+	@Test
+	public void testShowSettingsDialog() {
+		System.out.println(JmeSystem.class.getResource("/."));
+	}
 	
 	
 	
