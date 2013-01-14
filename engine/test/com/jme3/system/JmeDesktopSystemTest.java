@@ -1,9 +1,19 @@
 package com.jme3.system;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
+import java.awt.image.DataBufferByte;
+import java.awt.image.RenderedImage;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
 
 import mockit.Mock;
 import mockit.MockUp;
@@ -12,12 +22,15 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.jme3.asset.DesktopAssetManager;
 import com.jme3.audio.AudioRenderer;
 import com.jme3.audio.lwjgl.LwjglAudioRenderer;
 import com.jme3.system.JmeContext.Type;
 import com.jme3.system.lwjgl.LwjglCanvas;
 import com.jme3.system.lwjgl.LwjglDisplay;
 import com.jme3.system.lwjgl.LwjglOffscreenBuffer;
+import com.jme3.util.BufferUtils;
+import com.jme3.util.Screenshots;
 
 /**
  * A test of the code of {@link JmeDesktopSystem}.
@@ -120,11 +133,7 @@ public class JmeDesktopSystemTest {
 	 */
 	@Test
 	public void testNewAudioRendererUninitialized() {
-		new MockUp<JmeDesktopSystem>() {
-			@SuppressWarnings("unused")
-			@Mock(invocations=1)
-			void initialize(AppSettings set) {}
-		};
+		new CheckIfInitIsCalled();
 		delegate.newAudioRenderer(lwjglAudioSettings);
 	}
 	
@@ -277,6 +286,77 @@ public class JmeDesktopSystemTest {
 		newContext(CUSTOM_RENDERER_PREFIX+UNSUPPORTED_RENDERER_PREFIX, Type.OffscreenSurface);
 	}
 	
+	/**
+	 * Tests if initialize is called in newContext.
+	 */
+	@Test
+	public void testNewContextUninitialized() {
+		new CheckIfInitIsCalled();
+		newContext(NULL_RENDERER, Type.Headless);
+	}
+	
+	/**
+	 * Tests if newAssetManager(URL) creates a new DesktopAssetManager with the given URL.
+	 */
+	@Test
+	public void testNewAssetManagerWithURL() throws MalformedURLException {
+		final URL config = new URL("file://test-data/System");
+		new CheckDesktopAssetManagerConstructor(config);
+		Assert.assertEquals("newAssetManager(URL) didnt create a DesktopAssetManager",
+				DesktopAssetManager.class, delegate.newAssetManager(config).getClass());
+	}
+	
+	/**
+	 * Tests if newAssetManager creates a new DesktopAssetManager with null as config.
+	 */
+	@Test
+	public void testNewAssetManager() {
+		new CheckDesktopAssetManagerConstructor(null);
+		Assert.assertEquals("newAssetManager didnt create a DesktopAssetManager",
+				DesktopAssetManager.class, delegate.newAssetManager().getClass());
+	}
+	
+	/**
+	 * Tests if writeImageFile calls ImageIO.write(RenderedImage,String,OutputStream)
+	 * to write the image.
+	 * It also checks if the image got converted properly.
+	 * @param os should be mocked by JMockit
+	 */
+	@Test
+	public void testWriteImageFile(final OutputStream os) throws IOException {
+		final String format = "jpg";
+		final int width = 2;
+		final int height = 2;
+		final ByteBuffer buff = BufferUtils.createByteBuffer(width*height*4);
+		buff.putInt(0, 0xFFF00F00);
+		buff.putInt(3, 0xAA996655);
+		new MockUp<ImageIO>() {
+			@SuppressWarnings("unused")
+			@Mock(invocations=1)
+			boolean write(RenderedImage img, String f, OutputStream out) {
+				Assert.assertEquals("The image format changed",format, f);
+				Assert.assertEquals("The output stream changed",os, out);
+				Assert.assertEquals("The height changed", height, img.getHeight());
+				Assert.assertEquals("The width changed", width, img.getWidth());
+				BufferedImage img2 = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+				Screenshots.convertScreenShot(buff, img2);
+				byte[] buffExpected = ((DataBufferByte)img2.getData().getDataBuffer()).getData();
+				byte[] buffActual = ((DataBufferByte)img.getData().getDataBuffer()).getData();
+				Assert.assertEquals("buffers have unequal length",buffExpected.length, buffActual.length);
+				for (int i = 0; i < buffExpected.length; i++) {
+					Assert.assertEquals("byte number "+i+" did not get properly convered",
+							buffExpected[i], buffActual[i]);
+				}
+				return false;
+			}
+		};
+		delegate.writeImageFile(os, format, buff, width, height);
+	}
+	
+	
+	
+	
+	
 	
 	// uses the CustomTestClassLoader to cause a ClassNotFoundException
 	// assumes error is logged at level l using Logger.log(Level,String,Throwable)
@@ -357,5 +437,22 @@ class FakeLogger3 extends MockUp<Logger> {
 				expected, message);
 		Assert.assertEquals("The expected log level was not found", 
 				level, l);
+	}
+}
+
+class CheckIfInitIsCalled extends MockUp<JmeDesktopSystem> {
+	@Mock(invocations=1)
+	void initialize(AppSettings set) {}
+};
+
+class CheckDesktopAssetManagerConstructor extends MockUp<DesktopAssetManager> {
+	private final URL expected;
+	public CheckDesktopAssetManagerConstructor(URL expected) {
+		this.expected = expected;
+	}
+	@Mock(invocations=1)
+	public void $init(URL u){
+		Assert.assertEquals("The config was not passed properly to the new AssetManager", 
+				expected, u);
 	}
 }
