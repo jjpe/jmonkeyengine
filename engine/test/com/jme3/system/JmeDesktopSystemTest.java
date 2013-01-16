@@ -397,16 +397,15 @@ public class JmeDesktopSystemTest {
 	 * Tests if showErrorMessageDialog shows a {@link JOptionPane#ERROR_MESSAGE}
 	 * with the proper message.
 	 */
-	@SuppressWarnings("static-access")
 	@Test
 	public void testShowErrorMessageDialog() {
 		final String msg = "Hello, I'm testing errors!";
 		// make the error message 'appear' immediately, or the test might end before it does.
 		new MakeInvokeLaterImmediate();
 		new Expectations() {
-			final JOptionPane mock = null;
+			JOptionPane mock = null;
 			{
-				mock.showMessageDialog(null, msg, (String) any, JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, msg, (String) any, JOptionPane.ERROR_MESSAGE);
 				times=1;
 			}
 		};
@@ -421,7 +420,7 @@ public class JmeDesktopSystemTest {
 	public void testShowSettingsDialogOnEDT() {
 		new Expectations() {
 			@SuppressWarnings("unused")
-			final SwingUtilities util = null;
+			SwingUtilities util;
 			{
 				SwingUtilities.isEventDispatchThread(); result=true;
 			}
