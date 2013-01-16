@@ -20,7 +20,7 @@ public abstract class AbstractSystemIODelegate implements ISystemIODelegate {
 	}
 
 	@Override
-	public InputStream getResourceAsString(String name) {
+	public InputStream getResourceAsStream(String name) {
 		return this.getClass().getResourceAsStream(name);
 	}
 

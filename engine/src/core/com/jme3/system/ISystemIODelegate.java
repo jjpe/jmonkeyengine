@@ -1,6 +1,7 @@
 package com.jme3.system;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
@@ -27,7 +28,7 @@ public interface ISystemIODelegate {
 	 * @param slice the part of the image to use.
 	 * @return an ImageRaster which can be used to conveniently retrieve pixels.
 	 */
-	ImageRaster createImageRaster(Image img, int slice);
+	ImageRaster createImageRaster(Image image, int slice);
 	/**
 	 * Set whether the system has low permissions.
 	 * @param newVal true if the system has low permissions.
@@ -46,7 +47,7 @@ public interface ISystemIODelegate {
 	 * @param name the name of the resource.
 	 * @return an InputStream or null.
 	 */
-	InputStream getResourceAsString(String name);
+	InputStream getResourceAsStream(String name);
 	/**
 	 * Returns the URL of the given resource,
 	 * or null if there was no such resource.
@@ -66,11 +67,17 @@ public interface ISystemIODelegate {
 	 * for conversion details. 
 	 * @param out the {@link OutputStream} to write the image to.
 	 * @param format the informal format of the image. 
-	 * @param imgData the actual data buffer containing the pixel data.
+	 * @param imageData the actual data buffer containing the pixel data.
 	 * @param width the width of the image.
 	 * @param height the height of the image.
+	 * 
+	 * @throws IOException
 	 */
-	void writeImageFile(OutputStream out, String format, ByteBuffer imgData, int width, int height);
+	void writeImageFile(	OutputStream out, 
+							String format, 
+							ByteBuffer imageData, 
+							int width, 
+							int height) throws IOException;
 	
 	/**
 	 * Initializes the delegate.
