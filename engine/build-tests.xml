@@ -33,4 +33,21 @@
 		<delete dir="${tests.class.dir}"/>
 	</target>
 
+	<target name="we">
+		<path id="srcs">
+		<dirset dir="src" includes="*" excludes="jheora,jbullet"/>
+		</path>
+		
+		<mkdir dir="gatver"/>
+		<javac srcdir="src/core" destdir="gatver" includeantruntime="false"
+				    source="1.6" target="1.6" debug="true" nowarn="true" excludes="**/package-info.java"
+			compiler="org.eclipse.jdt.core.JDTCompilerAdapter">
+					<src refid="srcs"/>
+				 		<classpath location="lib/ecj-3.6.1.jar"/>
+				 	<classpath>
+				 		<fileset dir="lib" includes="**/*.jar"/>
+				 	</classpath>
+				</javac>
+	</target>
+	
 </project>
