@@ -16,6 +16,8 @@
 \DefineVerbatimEnvironment{example}{Verbatim}{fontsize=\small}
 
 \usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
 % \usepackage[margin=2cm]{geometry}
 \usepackage[backend=bibtex]{biblatex}
 \addbibresource{references.bib}
@@ -46,30 +48,66 @@
 \section{Introduction}
 
 
-% \newpage
-\section{Elected reengineerings}
-\label{sec:elected_reengineerings}
-We have chosen to reengineer the following parts of the JME3 core code
-base:
-\begin{enumerate}
-\item \textbf{JmeSystem}.
-\end{enumerate}
+\section{Refactoring}
+We have chosen to refactor the JmeSystem, 
+because it's a good example of a S.O.L.I.D. SRP violation.
+This means it does too much and therefore its afferent coupling is higher than it has to be.
+The afferent coupling of JmeSystem is diplayed in Figure~\ref{fig:system-incoming}.
+Changes in the JmeSystem are therefore harder to make without breaking other code,
+which is bad for maintainability.
 
-% \newpage
-\section{Motivation}
-The reason we have chosen the various parts of the codebase (see
-section \ref{sec:elected_reengineerings}) are as follows:
-\begin{enumerate}
-\item \textbf{JmeSystem} was chosen because it's not too large, it's
-  a good example of a S.O.L.I.D. SRP violation and it doesn't have too
-  many incoming dependencies, meaning pre-refactoring testability is
-  higher than with e.g. god classes.
-\end{enumerate}
+	The system itself uses a delegate, so the involved classes are JmeSystem, JmeSystemDelegate and JmeDesktopSystem from the com.jme3.system package, and JmeAndroidSystem from the com.jme3.system.android package.
+
+	We plan to write an extensive testsuite for these classes, which will be used to record their behaviour.
+	Then we will proceed to split the functionality in to smaller chunks with a more defined responsibility.
+	By introducing interfaces for each of these chunks, we will further increase extendability and reusability.
+	As these chunks can then be easily swapped and shared between different system types.
+	Our proposed decomposition of JmeSystem into parts with a single responsibility and the resulting decrease in afferent coupling
+	can be seen in Figure~\ref{fig:system-decomposition}.
+
+\begin{figure}[!hb]
+\hspace*{-20mm}
+\includegraphics[width=1.3\textwidth]{figures/jme-system-deps.png}
+\caption{The incoming dependencies of the JmeSystem. It is clear that these dependencies can be split up into smaller groups.}
+\label{fig:system-incoming}
+\end{figure}
+
+\begin{figure}
+\begin{subfigure}[b]{0.6\textwidth}
+\includegraphics[width=\textwidth]{figures/jme-system-io-part.png}
+\caption{This subsystem's main focus is IO, as the lowPermissions state is mostly related to which IO operations are allowed.}
+\label{fig:system-io-incoming}
+\end{subfigure}
+~
+\begin{subfigure}[b]{0.4\textwidth}
+\includegraphics[width=\textwidth]{figures/jme-system-dialog-part.png}
+\caption{The incoming dependencies of a sub part of JmeSystem, which we believe has the responsibility of dealing with Dialogs.}
+\label{fig:system-dialog-incoming}
+\end{subfigure}
+
+\begin{subfigure}[b]{0.6\textwidth}
+\includegraphics[width=\textwidth]{figures/jme-system-factory-part.png}
+\caption{This subsystem's main focus is creating new instances of certain sytem related classes.}
+\label{fig:system-factory-incoming}
+\end{subfigure}
+~
+\begin{subfigure}[b]{0.4\textwidth}
+\includegraphics[width=\textwidth]{figures/jme-system-general-part.png}
+\caption{The responsibility of this subsystem is handling system related state like a name and platform.}
+\label{fig:system-state-incoming}
+\end{subfigure}
+
+\caption{The decomposition of JmeSystem. The afferent coupling is reduced to 9.}
+\label{fig:system-decomposition}
+\end{figure}
 
 
 % \newpage
 \section{Feasibility}
-Given the scope of the refactorings
+	With an afferent coupling of 21 reported by Sonar, 
+	it is not nearly as bad as the Material class (which has an afferent coupling 193).
+	However, due to the limited resources we have, refactoring the JmeSystem is actually the
+	better choice, as it's a clear violation but still feasible with our resources.
 
 % \newpage
 \section{Before}
@@ -85,32 +123,32 @@ This figure shows that we have a single test case with an error.
 We did that on purpose, as it exposes a bug in the JmeSystemDelegate, 
 where an execution branch can never be visited (equals check of a lowercase string and "PowerPC", see Figure~\ref{fig:bug}).
 
-The testsuite is pretty extensive with a line covering well in the 80\% for the classes under test (see Figures~\ref{fig:cov-core},~\ref{fig:cov-desktop}~and~\ref{fig:cov-android}).
+The testsuite is pretty extensive with an instruction coverage well in the 80\% for the classes under test (see Figures~\ref{fig:cov-core},~\ref{fig:cov-desktop}~and~\ref{fig:cov-android}).
 Only JmeDesktopSystem was not covered properly at only 71\%. 
 This was due to some missing classes in our project (the Jogl classes),
 making it impossible to fully test the class. 
 However, those non-covered parts (newContextJogl) are actually almost duplicates (supported by incode code duplicate findings) of pieces that are covered (newContextLwjgl).
 So we are still confident that our testsuite suffices.
 
-\begin{figure}
+\begin{figure}[!hb]
 \includegraphics[width=\textwidth]{figures/86-new-tests.png}
 \caption{a run of the test suite. Showing 98 testcases and a single failure (indicating the bug of Figure~\ref{fig:bug})}
 \label{fig:num-tests}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[!hb]
 \includegraphics[width=\textwidth]{figures/bug-in-delegate.png}
 \caption{The coverage indicates that the branch on matching "PowerPC" is not covered. The only call to is64 actually only passes lowercased strings.}
 \label{fig:bug}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[!hb]
 \includegraphics[width=\textwidth]{figures/test-coverage-core.png}
 \caption{Test coverage for the com.jme3.system package in the src/core folder. We made testsuites for JmeSystem and JmeSystemDelegate.}
 \label{fig:cov-core}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[!hb]
 \includegraphics[width=\textwidth]{figures/test-coverage-desktop.png}
 \caption{Test coverage for the com.jme3.system package in the src/desktop folder. We made a testsuite for JmeDesktopSystem.}
 \label{fig:cov-desktop}
