@@ -1,5 +1,6 @@
 package com.jme3.system.android;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
@@ -20,7 +21,9 @@ import org.junit.Test;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Environment;
 
 import com.jme3.asset.AndroidAssetManager;
 import com.jme3.asset.AndroidImageInfo;
@@ -387,19 +390,8 @@ public class JmeAndroidSystemTest {
 	 */
 	@Test
 	public void getPlatformArmV5Test() {
-		// l. 
-
-		new MockUp<Object>() {
-			@Mock
-			public void m() {
-				
-			}
-		};
-		
-		new Expectations() {{
-			
-		}};
-		
+		new MockArchitecture("armv5");
+		Assert.assertEquals("wrong platform v5", Platform.Android_ARM5, delegate.getPlatform());
 	}
 	
 	/**
@@ -408,40 +400,18 @@ public class JmeAndroidSystemTest {
 	 */
 	@Test
 	public void getPlatformArmV6Test() {
-		// l. 
-
-		new MockUp<Object>() {
-			@Mock
-			public void m() {
-				
-			}
-		};
-		
-		new Expectations() {{
-			
-		}};
-		
+		new MockArchitecture("armv6");
+		Assert.assertEquals("wrong platform v6", Platform.Android_ARM6, delegate.getPlatform());
 	}
-	
+
 	/**
 	 * Tests retrieving the {@link Platform#Android_ARM7} enum 
 	 * value based on the {@link System} "os.arch" property.
 	 */
 	@Test
 	public void getPlatformArmV7Test() {
-		// l. 
-
-		new MockUp<Object>() {
-			@Mock
-			public void m() {
-				
-			}
-		};
-		
-		new Expectations() {{
-			
-		}};
-		
+		new MockArchitecture("armv7");
+		Assert.assertEquals("wrong platform v7", Platform.Android_ARM7, delegate.getPlatform());
 	}
 	
 	/**
@@ -450,87 +420,55 @@ public class JmeAndroidSystemTest {
 	 */
 	@Test
 	public void getPlatformUnknownArmTest() {
-		// l. 
-
-		new MockUp<Object>() {
-			@Mock
-			public void m() {
-				
-			}
-		};
-		
-		new Expectations() {{
-			
-		}};
-		
+		new MockArchitecture("arm derpyderp");
+		Assert.assertEquals("wrong platform unknown should resolve to v5", Platform.Android_ARM5, delegate.getPlatform());
 	}
 	
 	/**
 	 * Tests retrieving the {@link Platform#Android_ARM7} enum value 
 	 * if the arch is not recgnized as being of the ARM variety	
 	 */
-	@Test
+	@Test(expected=UnsupportedOperationException.class)
 	public void getPlatformUnsupportedAndroidPlatformTest() {
-		// l. 
-
-		new MockUp<Object>() {
-			@Mock
-			public void m() {
-				
-			}
-		};
-		
-		new Expectations() {{
-			
-		}};
-		
+		new MockArchitecture("derpyderp");
+		delegate.getPlatform();
 	}
 	
 	
-	// 
 
 	/**
 	 * Tests retrieving the storage folder when the FS is mounted.
 	 */
 	@Test
-	public void getMountedStorageFolderTest() {
-		// l. 
-
-		new MockUp<Object>() {
-			@Mock
-			public void m() {
-				
+	public void getMountedStorageFolderTest(final Activity a) {
+		JmeAndroidSystem.setActivity(a);
+		new NonStrictExpectations() {
+			Environment e;
+			Context c;
+			{
+				a.getApplicationContext();result=c;
+				c.getExternalFilesDir(null);result=new File("");
+				Environment.getExternalStorageState();result=Environment.MEDIA_MOUNTED;
 			}
 		};
-		
-		new Expectations() {{
-			
-		}};
-		
+		Assert.assertNotNull("didnt get a storagedir", delegate.getStorageFolder());
 	}
 	
 	/**
 	 * Tests retrieving the storage folder when the FS is not mounted.
 	 */
 	@Test
-	public void getUnmounedStorageFolderTest() {
-		// l. 
-
-		new MockUp<Object>() {
-			@Mock
-			public void m() {
-				
+	public void getUnmountedStorageFolderTest() {
+		new NonStrictExpectations() {
+			Environment e;
+			{
+				Environment.getExternalStorageState();result=Environment.MEDIA_UNMOUNTED;
 			}
 		};
-		
-		new Expectations() {{
-			
-		}};
-		
+		Assert.assertNull("somehow got a storagedir, should have been null", delegate.getStorageFolder());
 	}
 	
 	
-	//
 	
 	/**
 	 * Tests 
@@ -563,6 +501,21 @@ class ForceInvoke extends MockUp<Activity> {
 	@Mock
 	static void runOnUiThread(Runnable runnable) {
 		runnable.run();
+	}
+}
+
+class MockArchitecture extends MockUp<System> {
+	private final String arch;
+	public MockArchitecture(String arch) {
+		this.arch = arch;
+	}
+	@Mock
+	public String getProperty(String name) {
+		if ("os.arch".equals(name)) {
+			return arch; 
+		} else {
+			return System.getProperty(name, null);
+		}
 	}
 }
 
