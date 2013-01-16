@@ -47,11 +47,22 @@ import com.jme3.texture.Image;
 import com.jme3.texture.image.ImageRaster;
 
 public class JmeSystem {
-
     private static JmeSystemDelegate systemDelegate;
-
+    
+    private static ISystemDialogDelegate asdd;
+    private static ISystemIODelegate isiod;
+    private static ISystemFactoryDelegate isfd;
+    
     public static void setSystemDelegate(JmeSystemDelegate systemDelegate) {
         JmeSystem.systemDelegate = systemDelegate;
+    }
+    
+    public static void setSystemDelegate(	ISystemDialogDelegate asdd, 
+    										ISystemIODelegate isiod,
+    										ISystemFactoryDelegate isfd) {
+    	JmeSystem.asdd = asdd;
+    	JmeSystem.isiod = isiod;
+    	JmeSystem.isfd = isfd;
     }
     
     public static synchronized File getStorageFolder() {

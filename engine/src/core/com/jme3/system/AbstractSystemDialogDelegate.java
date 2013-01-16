@@ -2,6 +2,12 @@ package com.jme3.system;
 
 import com.jme3.input.SoftTextDialogInput;
 
+/**
+ * Abstract parent for interacting with Dialogs.
+ * 
+ * @author Volker Lanting
+ * @author Joey Ezechiels
+ */
 public abstract class AbstractSystemDialogDelegate implements ISystemDialogDelegate {
 	
 	protected SoftTextDialogInput softTextDialogInput = null;
