@@ -73,10 +73,10 @@ public interface ISystemIODelegate {
 	 * 
 	 * @throws IOException
 	 */
-	void writeImageFile(	OutputStream out, 
-							String format, 
-							ByteBuffer imageData, 
-							int width, 
+	void writeImageFile(	OutputStream out,
+							String format,
+							ByteBuffer imageData,
+							int width,
 							int height) throws IOException;
 	
 	/**
