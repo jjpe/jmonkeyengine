@@ -16,6 +16,11 @@ import com.jme3.system.android.JmeAndroidSystem;
 import com.jme3.system.android.OGLESContext;
 import com.jme3.util.JmeFormatter;
 
+/**
+ * A {@link ISystemFactoryDelegate} used for Android-based software.
+ * 
+ * @author Joey Ezechiels
+ */
 public class AndroidFactoryDelegate implements ISystemFactoryDelegate {
     private static Activity activity;
     

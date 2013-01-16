@@ -10,6 +10,12 @@ import com.jme3.asset.DesktopAssetManager;
 import com.jme3.audio.AudioRenderer;
 import com.jme3.system.JmeContext.Type;
 
+/**
+ * A {@link ISystemFactoryDelegate} implementation used for regular desktop-based software.
+ *  
+ * @author Volker Lanting
+ * @author Joey Ezechiels
+ */
 public class DesktopFactoryDelegate implements ISystemFactoryDelegate {
 
 	protected boolean initialized;
