@@ -5,22 +5,21 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.Logger;
-
-import javax.swing.JOptionPane;
 
 import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
+import mockit.NonStrict;
+import mockit.NonStrictExpectations;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.graphics.Bitmap;
 
 import com.jme3.asset.AndroidAssetManager;
@@ -34,7 +33,6 @@ import com.jme3.texture.Image;
 import com.jme3.texture.Image.Format;
 import com.jme3.texture.image.DefaultImageRaster;
 import com.jme3.texture.image.ImageRaster;
-import com.jme3.util.AndroidLogHandler;
 import com.jme3.util.BufferUtils;
 
 public class JmeAndroidSystemTest {
@@ -56,26 +54,22 @@ public class JmeAndroidSystemTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void writePngImageFileTest(/*final OutputStream os*/) throws IOException {
+	public void writePngImageFileTest(final OutputStream os) throws IOException {
 		// l. 44 - format.equals("png")
 
 		final String format = "png";
 		final int width = 2;
 		final int height = 2;
 		final ByteBuffer buf = BufferUtils.createByteBuffer(width*height*4);
-		buf.putInt(0, 0xFFF00F00);
-		buf.putInt(3, 0xAA996655);
-		
-		
-		final List<Integer> output = new ArrayList<Integer>();
-		OutputStream os = new OutputStream() {
-			@Override
-			public void write(int bite) throws IOException {
-				output.add(bite); 
+		new Expectations() {
+			@NonStrict Bitmap mock;
+			{
+				Bitmap.createBitmap(anyInt, anyInt, (Bitmap.Config) withNotNull());result=mock;
+				mock.getWidth();result=width;
+				mock.getHeight();result=height;
+				mock.compress(Bitmap.CompressFormat.PNG, anyInt, os);result=true;times=1;
 			}
 		};
-		
-		new BitmapMockup(); // mock Bitmap.createBitmap(int, int, Bitmap.Config)
 		
 		delegate.writeImageFile(os, format, buf, width, height);
 	}
@@ -85,25 +79,21 @@ public class JmeAndroidSystemTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void writeJpgImageFileTest() throws IOException {
+	public void writeJpgImageFileTest(final OutputStream os) throws IOException {
 
-		final String format = "png";
+		final String format = "jpg";
 		final int width = 2;
 		final int height = 2;
 		final ByteBuffer buf = BufferUtils.createByteBuffer(width*height*4);
-		buf.putInt(0, 0xFFF00F00);
-		buf.putInt(3, 0xAA996655);
-		
-		
-		final List<Integer> output = new ArrayList<Integer>();
-		OutputStream os = new OutputStream() {
-			@Override
-			public void write(int bite) throws IOException {
-				output.add(bite); 
+		new Expectations() {
+			@NonStrict Bitmap mock;
+			{
+				Bitmap.createBitmap(anyInt, anyInt, (Bitmap.Config) withNotNull());result=mock;
+				mock.getWidth();result=width;
+				mock.getHeight();result=height;
+				mock.compress(Bitmap.CompressFormat.JPEG, anyInt, os);result=true;times=1;
 			}
 		};
-		
-		new BitmapMockup(); // mock Bitmap.createBitmap(int, int, Bitmap.Config)
 		
 		delegate.writeImageFile(os, format, buf, width, height);
 	}
@@ -112,19 +102,24 @@ public class JmeAndroidSystemTest {
 	 * Tests writing an image with an unsupported format
 	 * @throws IOException
 	 */
-	@Test
-	public void writeUnsupportedImageFileTest() throws IOException {
+	@Test(expected=UnsupportedOperationException.class)
+	public void writeUnsupportedImageFileTest(final OutputStream os) throws IOException {
 		// l. 49 - UnsupportedOperationException
-		new MockUp<Object>() {
-			@Mock
-			public void m() {
-				
+		
+		final String format = "derpformat";
+		final int width = 2;
+		final int height = 2;
+		final ByteBuffer buf = BufferUtils.createByteBuffer(width*height*4);
+		new Expectations() {
+			@NonStrict Bitmap mock;
+			{
+				Bitmap.createBitmap(anyInt, anyInt, (Bitmap.Config) withNotNull());result=mock;
+				mock.getWidth();result=width;
+				mock.getHeight();result=height;
 			}
 		};
 		
-		new Expectations() {{
-			
-		}};
+		delegate.writeImageFile(os, format, buf, width, height);
 		
 	}
 	
@@ -244,41 +239,32 @@ public class JmeAndroidSystemTest {
 	 * 
 	 */
 	@Test
-	public void showErrorDialogTest() {
+	public void showErrorDialogTest(Activity a) {
 		final String msg = "Hello, I'm testing errors!";
 		// make the error message 'appear' immediately, or the test might end before it does.
 		new ForceInvoke();
-		new Expectations() {
-			JOptionPane mock;
+		new NonStrictExpectations() {
+			AlertDialog mock;
+			AlertDialog.Builder b;
 			{
-				JOptionPane.showMessageDialog(null, msg, (String) any, JOptionPane.ERROR_MESSAGE);
-				times=1;
+				b.setTitle(anyString);result=b;
+				b.setMessage(msg);result=b;times=1;
+				b.create();result=mock;
+				mock.show(); times=1;
 			}
 		};
-		
+		JmeAndroidSystem.setActivity(a);
 		delegate.showErrorDialog(msg);
 	}
 	
-	// 
 	
 	/**
 	 * Tests showSettingsDialog, which returns a flag.
 	 */
 	@Test
 	public void showSettingsDialogTest() {
-		// l.
-
-		new MockUp<Object>() {
-			@Mock
-			public void m() {
-				
-			}
-		};
-		
-		new Expectations() {{
-			
-		}};
-		
+		boolean b = delegate.showSettingsDialog(emptySettings, false);
+		Assert.assertTrue("showSettings should be a stub returning true on AndroidSytem", b);
 	}
 	
 	
@@ -289,17 +275,12 @@ public class JmeAndroidSystemTest {
 	 */
 	@Test
 	public void newContextTest() {
-		new MockUp<Object>() {
-			@Mock
-			public void m() {
-				
-			}
-		};
-		
-		new Expectations() {{
-			
-		}};
-		
+		String myrenderer = "derprenderer";
+		AppSettings settings = new AppSettings(false);
+		settings.setAudioRenderer(myrenderer);
+		JmeContext ctx = delegate.newContext(settings, null);
+		Assert.assertEquals("didnt get a OGLES context", OGLESContext.class, ctx.getClass());
+		Assert.assertEquals("setttings got scrambled", myrenderer, ctx.getSettings().getAudioRenderer());
 	}
 	
 	
@@ -555,90 +536,15 @@ public class JmeAndroidSystemTest {
 	 * Tests 
 	 */
 	@Test
-	public void setActivityTest() {
-		// l. 
-
-		new MockUp<Object>() {
-			@Mock
-			public void m() {
-				
-			}
-		};
-		
-		new Expectations() {{
-			
-		}};
-		
+	public void setAndGetActivityTest(Activity a) {
+		JmeAndroidSystem.setActivity(null);
+		Assert.assertNull("somehow got an activity when set to null", JmeAndroidSystem.getActivity());
+		JmeAndroidSystem.setActivity(a);
+		Assert.assertEquals("the activity got mutated", a, JmeAndroidSystem.getActivity());
 	}
 	
 	
-	// 
 	
-	/**
-	 * Tests 
-	 */
-	@Test
-	public void getActivityTest() {
-		// l. 
-
-		new MockUp<Object>() {
-			@Mock
-			public void m() {
-				
-			}
-		};
-		
-		new Expectations() {{
-			
-		}};
-		
-	}
-	
-//	TODO remove
-//	// 
-//	
-//	/**
-//	 * Tests 
-//	 */
-//	@Test
-//	public void cTest() {
-//		// l. 
-//
-//		new MockUp<Object>() {
-//			@Mock
-//			public void m() {
-//				
-//			}
-//		};
-//		
-//		new Expectations() {{
-//			
-//		}};
-//		
-//	}
-//	
-//	
-//	// 
-//	
-//	/**
-//	 * Tests 
-//	 */
-//	@Test
-//	public void dTest() {
-//		// l. 
-//
-//		new MockUp<Object>() {
-//			@Mock
-//			public void m() {
-//				
-//			}
-//		};
-//		
-//		new Expectations() {{
-//			
-//		}};
-//		
-//	}
 }
 
 class CheckAndroidAssetManagerConstructor extends MockUp<AndroidAssetManager> {
@@ -660,10 +566,3 @@ class ForceInvoke extends MockUp<Activity> {
 	}
 }
 
-class BitmapMockup extends MockUp<Bitmap> {
-	static Bitmap createBitmap(int width, int height, Bitmap.Config config) {
-		Assert.assertNotNull("Must not be null", config);
-		
-		return null;
-	}
-}
