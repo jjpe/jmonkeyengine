@@ -33,4 +33,9 @@ public interface ISystemDialogDelegate {
 	 * May be null.
 	 */
 	SoftTextDialogInput getSoftTextDialogInput();
+	/**
+	 * Initializes this delegate.
+	 * @param settings the settings required for initialization
+	 */
+	void initialize(AppSettings settings);
 }

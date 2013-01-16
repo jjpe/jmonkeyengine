@@ -71,4 +71,10 @@ public interface ISystemIODelegate {
 	 * @param height the height of the image.
 	 */
 	void writeImageFile(OutputStream out, String format, ByteBuffer imgData, int width, int height);
+	
+	/**
+	 * Initializes the delegate.
+	 * @param settings the settings required for initialization.
+	 */
+	void initialize(AppSettings settings);
 }

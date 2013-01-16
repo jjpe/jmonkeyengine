@@ -7,13 +7,13 @@ import com.jme3.audio.AudioRenderer;
 import com.jme3.system.JmeContext.Type;
 
 /**
- * {@link ISystemFactory} is an interface to some factory methods
+ * {@link ISystemFactoryDelegate} is an interface to some factory methods
  * for objects whose creation involves system specific configuration.
  *  
  * @author Volker Lanting
  *
  */
-public interface ISystemFactory {
+public interface ISystemFactoryDelegate {
 	/**
 	 * Creates a new {@link JmeContext} based on the Renderer in the settings
 	 * and the given context Type. 
@@ -40,4 +40,9 @@ public interface ISystemFactory {
 	 * @return the {@link AudioRenderer}.
 	 */
 	AudioRenderer newAudioRenderer(AppSettings setttings);
+	/**
+	 * Initializes this delegate.
+	 * @param settings the settings required for initialization.
+	 */
+	void initialize(AppSettings settings);
 }

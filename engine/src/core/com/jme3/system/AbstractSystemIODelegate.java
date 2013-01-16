@@ -44,4 +44,6 @@ public abstract class AbstractSystemIODelegate implements ISystemIODelegate {
         return storageFolder;
 	}
 
+	@Override
+	public void initialize(AppSettings settings) {}
 }

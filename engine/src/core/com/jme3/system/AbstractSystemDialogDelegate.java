@@ -16,4 +16,7 @@ public abstract class AbstractSystemDialogDelegate implements ISystemDialogDeleg
 		this.softTextDialogInput = input;
 	}
 	
+	@Override
+	public void initialize(AppSettings settings) {}
+	
 }
