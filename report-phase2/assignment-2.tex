@@ -153,6 +153,9 @@ making it impossible to fully test the class.
 However, those non-covered parts (newContextJogl) are actually almost duplicates (supported by incode code duplicate findings) of pieces that are covered (newContextLwjgl).
 So we are still confident that our testsuite suffices for the refactorings we want to make.
 
+We relayed all tests of JmeSystemDelegate, JmeDesktopSystem and JmeAndroidSystem to the new delegates.
+These tests pass, so their behaviour should be the same.
+We didn't have the time to update the JmeSystem testcases, so the implicit loading of the delegates remains untested.
 
 \begin{figure}[!hb]
 \includegraphics[width=\textwidth]{figures/86-new-tests.png}
