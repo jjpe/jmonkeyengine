@@ -155,7 +155,8 @@ So we are still confident that our testsuite suffices for the refactorings we wa
 
 We relayed all tests of JmeSystemDelegate, JmeDesktopSystem and JmeAndroidSystem to the new delegates.
 These tests pass, so their behaviour should be the same.
-We didn't have the time to update the JmeSystem testcases, so the implicit loading of the delegates remains untested.
+We also wrote a test for the new JmeSystem to see if the implicit loading of the delegates works as expected and to check if initialization worked the same.
+All tests passed, so we are confident the refactoring won't break the system.
 
 \begin{figure}[!hb]
 \includegraphics[width=\textwidth]{figures/86-new-tests.png}

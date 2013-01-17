@@ -72,15 +72,13 @@ public class JmeSystem {
 		dAlternatives.add("com.jme3.system.DesktopSystemDialogDelegate");
 		iAlternatives.add("com.jme3.system.DesktopSystemIODelegate");
 		fAlternatives.add("com.jme3.system.DesktopSystemFactoryDelegate");
+		sAlternatives.add("com.jme3.system.DesktopSystemStateDelegate");
 		
 		// ... and only then add the Android class names.
 		dAlternatives.add("com.jme3.system.android.AndroidSystemDialogDelegate");
 		iAlternatives.add("com.jme3.system.android.AndroidSystemIODelegate");
 		fAlternatives.add("com.jme3.system.android.AndroidSystemFactoryDelegate");
-		
-		// This delegate can be used for both Desktop 
-		// and Android, so there's only one entry.
-		sAlternatives.add("com.jme3.system.SystemStateDelegate");
+		sAlternatives.add("com.jme3.system.android.AndroidSystemStateDelegate");
 		
 		map.put(ISystemDialogDelegate.class, dAlternatives);
 		map.put(ISystemIODelegate.class, iAlternatives);

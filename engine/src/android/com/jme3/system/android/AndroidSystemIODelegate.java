@@ -1,10 +1,15 @@
 package com.jme3.system.android;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
+import android.os.Environment;
 
 import com.jme3.asset.AndroidImageInfo;
 import com.jme3.system.AbstractSystemIODelegate;
@@ -49,5 +54,28 @@ public class AndroidSystemIODelegate extends AbstractSystemIODelegate {
         }
         bitmapImage.compress(compressFormat, 95, outStream);
         bitmapImage.recycle();
+    }
+	
+	@Override
+    public synchronized File getStorageFolder() {
+		// FIXME dirty way to obtain the activity
+		Activity activity = JmeAndroidSystem.getActivity();
+        //http://developer.android.com/reference/android/content/Context.html#getExternalFilesDir
+        //http://developer.android.com/guide/topics/data/data-storage.html
+
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            // getExternalFilesDir automatically creates the directory if necessary.
+            // directory structure should be: /mnt/sdcard/Android/data/<packagename>/files
+            // when created this way, the directory is automatically removed by the Android
+            //   system when the app is uninstalled
+            storageFolder = activity.getApplicationContext().getExternalFilesDir(null);
+            Logger.getLogger(AndroidSystemIODelegate.class.getName()).log(Level.INFO, "Storage Folder Path: {0}", storageFolder.getAbsolutePath());
+
+            return storageFolder;
+        } else {
+            return null;
+        }
+
     }
 }

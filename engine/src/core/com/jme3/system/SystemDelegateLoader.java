@@ -14,7 +14,7 @@ public final class SystemDelegateLoader<T extends ISystemDelegate> {
 	public T tryToLoad(String className) 
 			throws InstantiationException, IllegalAccessException {
         try {
-            return (T) Class.forName(className).newInstance();
+            return (T) Thread.currentThread().getContextClassLoader().loadClass(className).newInstance();
         } catch (ClassNotFoundException ex) {
             return null;
         }

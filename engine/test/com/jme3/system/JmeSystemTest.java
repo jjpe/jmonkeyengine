@@ -1,23 +1,21 @@
 package com.jme3.system;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import mockit.Mock;
 import mockit.MockUp;
+import mockit.NonStrictExpectations;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,32 +23,38 @@ import org.junit.Test;
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioRenderer;
 import com.jme3.input.SoftTextDialogInput;
+import com.jme3.system.android.AndroidSystemDialogDelegate;
+import com.jme3.system.android.AndroidSystemFactoryDelegate;
+import com.jme3.system.android.AndroidSystemIODelegate;
+import com.jme3.system.android.AndroidSystemStateDelegate;
 import com.jme3.system.android.JmeAndroidSystem;
 import com.jme3.texture.Image;
 import com.jme3.texture.image.ImageRaster;
+import com.jme3.util.JmeFormatter;
 
 public class JmeSystemTest {
-
-	private static final String[] DELEGATES = new String[]{
-		JmeDesktopSystem.class.getName(),
-		JmeAndroidSystem.class.getName()
-	};
-
 	
-	/**
-	 * Returns all delegates from {@link #DELEGATES},
-	 * except the one that was given.
-	 */
-	private String[] allDelegatesExcept(Class<? extends JmeSystemDelegate> clazz) {
-		ArrayList<String> delegates = new ArrayList<String>();
-		for (String delegate : DELEGATES) {
-			if (!clazz.getName().equals(delegate)) {
-				delegates.add(delegate);
-			}
-		}
-		return delegates.toArray(new String[delegates.size()]);
-	}
+	private CustomTestClassLoader androidLoader = new CustomTestClassLoader(
+			"com.jme3.system.DesktopSystemDialogDelegate",
+			"com.jme3.system.DesktopSystemIODelegate",
+			"com.jme3.system.DesktopSystemFactoryDelegate",
+			"com.jme3.system.DesktopSystemStateDelegate");
+
+	private CustomTestClassLoader desktopLoader = new CustomTestClassLoader(
+			"com.jme3.system.android.AndroidSystemDialogDelegate",
+			"com.jme3.system.android.AndroidSystemIODelegate",
+			"com.jme3.system.android.AndroidSystemFactoryDelegate",
+			"com.jme3.system.android.AndroidSystemStateDelegate");
 	
+	private CustomTestClassLoader nonLoader = new CustomTestClassLoader(
+			"com.jme3.system.DesktopSystemDialogDelegate",
+			"com.jme3.system.DesktopSystemIODelegate",
+			"com.jme3.system.DesktopSystemFactoryDelegate",
+			"com.jme3.system.android.AndroidSystemDialogDelegate",
+			"com.jme3.system.android.AndroidSystemIODelegate",
+			"com.jme3.system.android.AndroidSystemFactoryDelegate",
+			"com.jme3.system.DesktopSystemStateDelegate",
+			"com.jme3.system.android.AndroidSystemStateDelegate");
 	
 	
 	/**
@@ -72,7 +76,8 @@ public class JmeSystemTest {
 				
 			}
 		};
-		Class<?> system = new CustomTestClassLoader(DELEGATES).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(nonLoader);
+		Class<?> system = nonLoader.customLoadClass(JmeSystem.class);
 		for (Method method : system.getMethods()) {
 			if (method.getParameterTypes().length == 0 
 					&& Modifier.isStatic(method.getModifiers())) {
@@ -97,12 +102,13 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadAndroidOnGetPlatform() throws Throwable {
-		new MockUp<JmeAndroidSystem>(){
+		new MockUp<AndroidSystemStateDelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			Platform getPlatform(){return null;}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"getPlatform");
 	}
 	
@@ -112,12 +118,13 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadAndroidOnGetStorageFolder() throws Throwable {
-		new MockUp<JmeAndroidSystem>(){
+		new MockUp<AndroidSystemIODelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			File getStorageFolder(){return null;}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"getStorageFolder");
 	}
 	
@@ -127,12 +134,13 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadAndroidOnGetFullName() throws Throwable {
-		new MockUp<JmeAndroidSystem>(){
+		new MockUp<AndroidSystemStateDelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			String getFullName(){return null;}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"getFullName");
 	}
 	
@@ -142,12 +150,13 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadAndroidOnGetResourceAsStream() throws Throwable {
-		new MockUp<JmeAndroidSystem>(){
+		new MockUp<AndroidSystemIODelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			InputStream getResourceAsStream(String a){return null;}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"getResourceAsStream", new Class<?>[]{String.class}, new Object[]{null});
 	}
 	
@@ -157,12 +166,13 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadAndroidOnGetResource() throws Throwable {
-		new MockUp<JmeAndroidSystem>(){
+		new MockUp<AndroidSystemIODelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			URL getResource(String a){return null;}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"getResource", new Class<?>[]{String.class}, new Object[]{null});
 	}
 	
@@ -172,12 +182,13 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadAndroidOnTrackDirectmemory() throws Throwable {
-		new MockUp<JmeAndroidSystem>(){
+		new MockUp<AndroidSystemStateDelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			boolean trackDirectMemory(){return true;}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"trackDirectMemory");
 	}
 
@@ -187,12 +198,13 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadAndroidOnSetLowPermissions() throws Throwable {
-		new MockUp<JmeAndroidSystem>(){
+		new MockUp<AndroidSystemIODelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			void setLowPermissions(boolean a){}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"setLowPermissions",new Class<?>[]{boolean.class},new Object[]{true});
 	}
 	
@@ -203,12 +215,13 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadAndroidOnIsLowPermissions() throws Throwable {
-		new MockUp<JmeAndroidSystem>(){
+		new MockUp<AndroidSystemIODelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			boolean isLowPermissions(){return true;}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"isLowPermissions");
 	}
 	
@@ -219,12 +232,13 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadAndroidOnSetSoftTextDialogInput() throws Throwable {
-		new MockUp<JmeAndroidSystem>(){
+		new MockUp<AndroidSystemDialogDelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			void setSoftTextDialogInput(SoftTextDialogInput a){}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"setSoftTextDialogInput",new Class<?>[]{SoftTextDialogInput.class},new Object[]{null});
 	}
 	
@@ -235,12 +249,13 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadAndroidOnGetSoftTextDialogInput() throws Throwable {
-		new MockUp<JmeAndroidSystem>(){
+		new MockUp<AndroidSystemDialogDelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			SoftTextDialogInput getSoftTextDialogInput(){return null;}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"getSoftTextDialogInput");
 	}
 	
@@ -251,12 +266,13 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadAndroidOnWriteImageFile() throws Throwable {
-		new MockUp<JmeAndroidSystem>(){
+		new MockUp<AndroidSystemIODelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			void writeImageFile(OutputStream a,String b,ByteBuffer c,int d,int e){}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"writeImageFile",new Class[]{OutputStream.class,String.class,ByteBuffer.class,int.class,int.class},new Object[]{null,null,null,0,0});
 	}
 	
@@ -267,12 +283,13 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadAndroidOnNewAssetManagerUrl() throws Throwable {
-		new MockUp<JmeAndroidSystem>(){
+		new MockUp<AndroidSystemFactoryDelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			AssetManager newAssetManager(URL a){return null;}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"newAssetManager",new Class[]{URL.class},new Object[]{null});
 	}
 	
@@ -283,12 +300,13 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadAndroidOnNewAssetManager() throws Throwable {
-		new MockUp<JmeAndroidSystem>(){
+		new MockUp<AndroidSystemFactoryDelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			AssetManager newAssetManager(){return null;}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"newAssetManager");
 	}
 	
@@ -299,12 +317,13 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadAndroidOnShowSettingsDialog() throws Throwable {
-		new MockUp<JmeAndroidSystem>(){
+		new MockUp<AndroidSystemDialogDelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			boolean showSettingsDialog(AppSettings a, boolean b){return true;}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"showSettingsDialog",new Class[]{AppSettings.class,boolean.class},new Object[]{null,false});
 	}
 	
@@ -315,12 +334,13 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadAndroidOnNewContext() throws Throwable {
-		new MockUp<JmeAndroidSystem>(){
+		new MockUp<AndroidSystemFactoryDelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			JmeContext newContext(AppSettings a, JmeContext.Type b){return null;}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"newContext",new Class[]{AppSettings.class,JmeContext.Type.class},new Object[]{null,JmeContext.Type.Canvas});
 	}
 	
@@ -331,12 +351,13 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadAndroidOnNewAudioRenderer() throws Throwable {
-		new MockUp<JmeAndroidSystem>(){
+		new MockUp<AndroidSystemFactoryDelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			AudioRenderer newAudioRenderer(AppSettings a){return null;}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"newAudioRenderer",new Class[]{AppSettings.class},new Object[]{null});
 	}
 	
@@ -347,12 +368,13 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadAndroidOnInitialize() throws Throwable {
-		new MockUp<JmeAndroidSystem>(){
+		new MockUp<AndroidSystemFactoryDelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			void initialize(AppSettings a){}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"initialize",new Class[]{AppSettings.class},new Object[]{null});
 	}
 	
@@ -363,12 +385,13 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadAndroidOnCreateImageRaster() throws Throwable {
-		new MockUp<JmeAndroidSystem>(){
+		new MockUp<AndroidSystemIODelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			ImageRaster createImageRaster(Image a, int b){return null;}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"createImageRaster",new Class[]{Image.class,int.class},new Object[]{null,0});
 	}
 	
@@ -379,12 +402,13 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadAndroidOnShowErrorDialog() throws Throwable {
-		new MockUp<JmeAndroidSystem>(){
+		new MockUp<AndroidSystemDialogDelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			void showErrorDialog(String a){}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeAndroidSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"showErrorDialog",new Class[]{String.class},new Object[]{null});
 	}
 	
@@ -412,13 +436,149 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testImplictlyLoadDesktopOnGetPlatform() throws Throwable {
-		new MockUp<JmeDesktopSystem>(){
+		new MockUp<DesktopSystemStateDelegate>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations=1)
 			Platform getPlatform(){return null;}
 		};
-		Class<?> system = new CustomTestClassLoader(allDelegatesExcept(JmeDesktopSystem.class)).customLoadClass(JmeSystem.class);
+		Thread.currentThread().setContextClassLoader(desktopLoader);
+		Class<?> system = desktopLoader.customLoadClass(JmeSystem.class);
 		invokeStatic(system,"getPlatform");
+	}
+	
+	
+	private void uninitializeSystem() {
+		JmeSystem.setDelegate((ISystemDialogDelegate) null);
+		JmeSystem.setDelegate((ISystemFactoryDelegate) null);
+		JmeSystem.setDelegate((ISystemIODelegate) null);
+		JmeSystem.setDelegate((ISystemStateDelegate) null);
+	}
+	
+	/**
+	 * Tests if the initialize method tries to extract native libraries
+	 * with the correct AppSettings.
+	 */
+	@Test
+	public void testDesktopInitialize() {
+		uninitializeSystem();
+		final AppSettings emptySettings = new AppSettings(false);
+		new MockUp<Natives>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations = 1)
+			void extractNativeLibs(Platform p, AppSettings s){
+				Assert.assertEquals("extracting native lib with different settings than those given to initialize",
+						emptySettings, s);
+			};
+		};
+		Thread.currentThread().setContextClassLoader(desktopLoader);
+		JmeSystem.setLowPermissions(false);
+		JmeSystem.initialize(emptySettings);
+	}
+	
+	/**
+	 * Tests if the initialize method continues without interruption,
+	 * even if an IOException is thrown by {@link Natives#extractNativeLibs(Platform, AppSettings)}.
+	 */
+	@Test
+	public void testDesktopInitializeWithIOException() {
+		uninitializeSystem();
+		new MockUp<Natives>(){
+			@SuppressWarnings("unused")
+			@Mock(invocations = 1)
+			void extractNativeLibs(Platform p, AppSettings s) throws IOException {
+				throw new IOException("this is not allowed");
+			};
+		};
+		Thread.currentThread().setContextClassLoader(desktopLoader);
+		JmeSystem.setLowPermissions(false);
+		JmeSystem.initialize(new AppSettings(false));
+	}
+	
+	/**
+	 * Tests if the initialize method skips loading of native libraries
+	 * if low permissions is set.
+	 */
+	@Test
+	public void testInitializeWithLowPermissions() {
+		uninitializeSystem();
+		new MockUp<Natives>(){
+			@SuppressWarnings("unused")
+			@Mock
+			void extractNativeLibs(Platform p, AppSettings s){
+				Assert.fail("With low permissions you should not be able to extract native libs");
+			};
+		};
+		Thread.currentThread().setContextClassLoader(desktopLoader);
+		JmeSystem.setLowPermissions(true);
+		JmeSystem.initialize(new AppSettings(false));
+	}
+
+	/**
+	 * Tests if the initialize method skips loading of native libraries
+	 * if it has already been called before.
+	 */
+	@Test
+	public void testDesktopInitializeTwice() {
+		uninitializeSystem();
+		new NoNativeExtraction();
+		Thread.currentThread().setContextClassLoader(desktopLoader);
+		JmeSystem.setLowPermissions(false);
+		JmeSystem.initialize(new AppSettings(false));
+		JmeSystem.initialize(new AppSettings(false));
+	}
+	
+	/**
+	 * Tests initializing a JmeAndroidSystem for the first time
+	 */
+	@Test
+	public void initializeAndroidWithZeroHandlersTest() {
+		uninitializeSystem();
+		new NonStrictExpectations() {
+			Logger mock;
+			Logger mock2;
+			Handler h1;
+			Handler h2;
+			{
+				Logger.getLogger(anyString);result=mock;
+				mock.getParent();result=mock2;times=1;
+				mock.getHandlers();result=new Handler[0];
+				mock2.getHandlers();result=new Handler[]{h1,h2};
+				h1.setFormatter((JmeFormatter) any); times=1;
+				h1.setLevel(Level.ALL);times=1;
+				h2.setFormatter((JmeFormatter) any); times=1;
+				h2.setLevel(Level.ALL);times=1;
+			}
+		};
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		JmeSystem.initialize(new AppSettings(false));
+	}
+	
+
+	/**
+	 * Tests initializing a JmeAndroidSystem if it's already been initialized
+	 */
+	@Test
+	public void initializeTwiceTest() {
+		uninitializeSystem();
+		new NonStrictExpectations() {
+			Logger mock;
+			Logger mock2;
+			Handler h1;
+			Handler h2;
+			{
+				Logger.getLogger(anyString);result=mock;
+				mock.getParent();result=mock2;times=1;
+				mock.getHandlers();result=new Handler[0];
+				mock2.getHandlers();result=new Handler[]{h1,h2};
+				h1.setFormatter((JmeFormatter) any); times=1;
+				h1.setLevel(Level.ALL);times=1;
+				h2.setFormatter((JmeFormatter) any); times=1;
+				h2.setLevel(Level.ALL);times=1;
+			}
+		};
+		Thread.currentThread().setContextClassLoader(androidLoader);
+		JmeSystem.initialize(new AppSettings(false));
+		JmeSystem.initialize(new AppSettings(false));
 	}
 	
 }

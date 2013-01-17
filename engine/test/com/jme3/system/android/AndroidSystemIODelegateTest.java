@@ -1,5 +1,6 @@
 package com.jme3.system.android;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
@@ -8,12 +9,16 @@ import mockit.Expectations;
 import mockit.Mock;
 import mockit.MockUp;
 import mockit.NonStrict;
+import mockit.NonStrictExpectations;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Environment;
 
 import com.jme3.asset.AndroidImageInfo;
 import com.jme3.texture.Image;
@@ -177,5 +182,37 @@ public class AndroidSystemIODelegateTest {
 		
 		delegate.writeImageFile(os, format, buf, width, height);
 		
+	}
+	
+	/**
+	 * Tests retrieving the storage folder when the FS is mounted.
+	 */
+	@Test
+	public void getMountedStorageFolderTest(final Activity a) {
+		JmeAndroidSystem.setActivity(a);
+		new NonStrictExpectations() {
+			Environment e;
+			Context c;
+			{
+				a.getApplicationContext();result=c;
+				c.getExternalFilesDir(null);result=new File("");
+				Environment.getExternalStorageState();result=Environment.MEDIA_MOUNTED;
+			}
+		};
+		Assert.assertNotNull("didnt get a storagedir", delegate.getStorageFolder());
+	}
+	
+	/**
+	 * Tests retrieving the storage folder when the FS is not mounted.
+	 */
+	@Test
+	public void getUnmountedStorageFolderTest() {
+		new NonStrictExpectations() {
+			Environment e;
+			{
+				Environment.getExternalStorageState();result=Environment.MEDIA_UNMOUNTED;
+			}
+		};
+		Assert.assertNull("somehow got a storagedir, should have been null", delegate.getStorageFolder());
 	}
 }

@@ -314,61 +314,10 @@ public class JmeAndroidSystemTest {
 				return new Handler[]{};
 			}
 		};
-		
-		
-		
 		delegate.initialize(emptySettings);
-		
-		
-		
-		
-//		
-//		new Expectations() {{
-//			
-//		}};
-//		
-//		new MockUp<Logger>() {
-////			@SuppressWarnings("unused")
-////			@Mock(invocations = 1)
-////			void extractNativeLibs(Platform p, AppSettings s){
-////				Assert.assertEquals("extracting native lib with different settings than those given to initialize",
-////						emptySettings, s);
-////			};
-//
-//			@SuppressWarnings("unused")
-//			@Mock
-//			Handler[] getHandlers() {
-//				return new Handler[]{
-//					new AndroidLogHandler(), 
-//					new AndroidLogHandler()
-//				};
-//			}
-//		};
-		
-//		delegate.lowPermissions = false;
-//		delegate.initialize(emptySettings);
-		
 	}
 	
-	/**
-	 * Tests 
-	 */
-//	@Test
-//	public void initializeWithAtLeastOneHandlerTest() {
-//		new MockUp<Logger>() {
-//			@SuppressWarnings("unused")
-//			@Mock
-//			Handler[] getHandlers() {
-//				return new Handler[]{
-//					new AndroidLogHandler(), 
-//					new AndroidLogHandler()
-//				};
-//			}
-//		};
-//		
-//		delegate.initialize(emptySettings);
-//	}
-//	
+
 	/**
 	 * Tests initializing a JmeAndroidSystem if it's already been initialized
 	 */
@@ -377,9 +326,6 @@ public class JmeAndroidSystemTest {
 		delegate.initialize(emptySettings);
 		delegate.initialize(emptySettings);
 	}
-	
-	
-	// TODO check with Volker on how to test the do-while
 	
 	
 	// Tests getPlatform()
