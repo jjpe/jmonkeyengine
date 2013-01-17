@@ -37,6 +37,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,107 +51,149 @@ import com.jme3.texture.Image;
 import com.jme3.texture.image.ImageRaster;
 
 public class JmeSystem {
-    private static JmeSystemDelegate systemDelegate;
+    private static ISystemDialogDelegate dialogDelegate = null;
+    private static ISystemIODelegate ioDelegate = null;
+    private static ISystemFactoryDelegate factoryDelegate = null;
+    private static ISystemStateDelegate stateDelegate = null;
+	
+    private static final Map<Class<? extends ISystemDelegate>, List<String>> delegateNameLookupTable =
+    		createLookupMap();
+	
+	private static Map<Class<? extends ISystemDelegate>, List<String>> createLookupMap() {
+		Map<Class<? extends ISystemDelegate>, List<String>> map = 
+				new HashMap<Class<? extends ISystemDelegate>, List<String>>();
+		
+		List<String> dAlternatives = new ArrayList<String>();
+		List<String> iAlternatives = new ArrayList<String>();
+		List<String> fAlternatives = new ArrayList<String>();
+		List<String> sAlternatives = new ArrayList<String>();
+		
+		// First put all the Desktop class names...
+		dAlternatives.add("com.jme3.system.DesktopSystemDialogDelegate");
+		iAlternatives.add("com.jme3.system.DesktopSystemIODelegate");
+		fAlternatives.add("com.jme3.system.DesktopSystemFactoryDelegate");
+		
+		// ... and only then add the Android class names.
+		dAlternatives.add("com.jme3.system.android.AndroidSystemDialogDelegate");
+		iAlternatives.add("com.jme3.system.android.AndroidSystemIODelegate");
+		fAlternatives.add("com.jme3.system.android.AndroidSystemFactoryDelegate");
+		
+		// This delegate can be used for both Desktop 
+		// and Android, so there's only one entry.
+		sAlternatives.add("com.jme3.system.SystemStateDelegate");
+		
+		map.put(ISystemDialogDelegate.class, dAlternatives);
+		map.put(ISystemIODelegate.class, iAlternatives);
+		map.put(ISystemFactoryDelegate.class, fAlternatives);
+		map.put(ISystemStateDelegate.class, sAlternatives);
+		
+		return map;
+	}
     
-    private static ISystemDialogDelegate asdd;
-    private static ISystemIODelegate isiod;
-    private static ISystemFactoryDelegate isfd;
-    
-    public static void setSystemDelegate(JmeSystemDelegate systemDelegate) {
-        JmeSystem.systemDelegate = systemDelegate;
+    public static void setDelegate(ISystemDialogDelegate dialogDelegate) {
+    	JmeSystem.dialogDelegate = dialogDelegate;
     }
     
-    public static void setSystemDelegate(	ISystemDialogDelegate asdd, 
-    										ISystemIODelegate isiod,
-    										ISystemFactoryDelegate isfd) {
-    	JmeSystem.asdd = asdd;
-    	JmeSystem.isiod = isiod;
-    	JmeSystem.isfd = isfd;
+    public static void setDelegate(ISystemIODelegate ioDelegate) {
+    	JmeSystem.ioDelegate = ioDelegate;
+    }
+    
+    public static void setDelegate(ISystemFactoryDelegate factoryDelegate) {
+    	JmeSystem.factoryDelegate = factoryDelegate;
+    }
+    
+    public static void setDelegate(ISystemStateDelegate stateDelegate) {
+    	JmeSystem.stateDelegate = stateDelegate;
     }
     
     public static synchronized File getStorageFolder() {
-        checkDelegate();
-        return systemDelegate.getStorageFolder();
+        ensureDelegatesAreLoaded();
+        return ioDelegate.getStorageFolder();
     }
 
     public static String getFullName() {
-        checkDelegate();
-        return systemDelegate.getFullName();
+        ensureDelegatesAreLoaded();
+        return stateDelegate.getFullName();
     }
 
     public static InputStream getResourceAsStream(String name) {
-        checkDelegate();
-        return systemDelegate.getResourceAsStream(name);
+        ensureDelegatesAreLoaded();
+        return ioDelegate.getResourceAsStream(name);
     }
 
     public static URL getResource(String name) {
-        checkDelegate();
-        return systemDelegate.getResource(name);
+        ensureDelegatesAreLoaded();
+        return ioDelegate.getResource(name);
     }
 
     public static boolean trackDirectMemory() {
-        checkDelegate();
-        return systemDelegate.trackDirectMemory();
+        ensureDelegatesAreLoaded();
+        return stateDelegate.trackDirectMemory();
     }
 
     public static void setLowPermissions(boolean lowPerm) {
-        checkDelegate();
-        systemDelegate.setLowPermissions(lowPerm);
+        ensureDelegatesAreLoaded();
+        ioDelegate.setLowPermissions(lowPerm);
     }
 
     public static boolean isLowPermissions() {
-        checkDelegate();
-        return systemDelegate.isLowPermissions();
+        ensureDelegatesAreLoaded();
+        return ioDelegate.isLowPermissions();
     }
 
     public static void setSoftTextDialogInput(SoftTextDialogInput input) {
-        checkDelegate();
-        systemDelegate.setSoftTextDialogInput(input);
+        ensureDelegatesAreLoaded();
+        dialogDelegate.setSoftTextDialogInput(input);
     }
 
     public static SoftTextDialogInput getSoftTextDialogInput() {
-        checkDelegate();
-        return systemDelegate.getSoftTextDialogInput();
+        ensureDelegatesAreLoaded();
+        return dialogDelegate.getSoftTextDialogInput();
     }
     
-    public static void writeImageFile(OutputStream outStream, String format, ByteBuffer imageData, int width, int height) throws IOException {
-        checkDelegate();
-        systemDelegate.writeImageFile(outStream, format, imageData, width, height);
+    public static void writeImageFile(OutputStream outStream, 
+    								  String format, 
+    								  ByteBuffer imageData, 
+    								  int width, 
+    								  int height) throws IOException {
+        ensureDelegatesAreLoaded();
+        ioDelegate.writeImageFile(outStream, format, imageData, width, height);
     }
 
     public static AssetManager newAssetManager(URL configFile) {
-        checkDelegate();
-        return systemDelegate.newAssetManager(configFile);
+        ensureDelegatesAreLoaded();
+        return factoryDelegate.newAssetManager(configFile);
     }
 
     public static AssetManager newAssetManager() {
-        checkDelegate();
-        return systemDelegate.newAssetManager();
+        ensureDelegatesAreLoaded();
+        return factoryDelegate.newAssetManager();
     }
 
-    public static boolean showSettingsDialog(AppSettings sourceSettings, final boolean loadFromRegistry) {
-        checkDelegate();
-        return systemDelegate.showSettingsDialog(sourceSettings, loadFromRegistry);
+    public static boolean showSettingsDialog(AppSettings sourceSettings, 
+    										 final boolean loadFromRegistry) {
+        ensureDelegatesAreLoaded();
+        return dialogDelegate.showSettingsDialog(sourceSettings, loadFromRegistry);
     }
 
     public static Platform getPlatform() {
-        checkDelegate();
-        return systemDelegate.getPlatform();
+        ensureDelegatesAreLoaded();
+        return stateDelegate.getPlatform();
     }
 
     public static JmeContext newContext(AppSettings settings, JmeContext.Type contextType) {
-        checkDelegate();
-        return systemDelegate.newContext(settings, contextType);
+        ensureDelegatesAreLoaded();
+        return factoryDelegate.newContext(settings, contextType);
     }
 
     public static AudioRenderer newAudioRenderer(AppSettings settings) {
-        checkDelegate();
-        return systemDelegate.newAudioRenderer(settings);
+        ensureDelegatesAreLoaded();
+        return factoryDelegate.newAudioRenderer(settings);
     }
     
     public static ImageRaster createImageRaster(Image image, int slice) {
-        checkDelegate();
-        return systemDelegate.createImageRaster(image, slice);
+        ensureDelegatesAreLoaded();
+        return ioDelegate.createImageRaster(image, slice);
     }
 
     /**
@@ -159,42 +205,69 @@ public class JmeSystem {
      * characters.
      */
     public static void showErrorDialog(String message){
-        checkDelegate();
-        systemDelegate.showErrorDialog(message);
+        ensureDelegatesAreLoaded();
+        dialogDelegate.showErrorDialog(message);
     }
     
     public static void initialize(AppSettings settings) {
-        checkDelegate();
-        systemDelegate.initialize(settings);
-    }
-
-    private static JmeSystemDelegate tryLoadDelegate(String className) throws InstantiationException, IllegalAccessException {
-        try {
-            return (JmeSystemDelegate) Class.forName(className).newInstance();
-        } catch (ClassNotFoundException ex) {
-            return null;
-        }
+        ensureDelegatesAreLoaded();
+        ioDelegate.initialize(settings);
+        dialogDelegate.initialize(settings);
+        factoryDelegate.initialize(settings);
     }
     
+    private static void ensureDelegatesAreLoaded() {
+    	JmeSystem.dialogDelegate = 
+    			ensureIsLoaded(dialogDelegate, ISystemDialogDelegate.class);
+    	JmeSystem.ioDelegate = 
+    			ensureIsLoaded(ioDelegate, ISystemIODelegate.class);
+    	JmeSystem.factoryDelegate = 
+    			ensureIsLoaded(factoryDelegate, ISystemFactoryDelegate.class);
+    	JmeSystem.stateDelegate = 
+    			ensureIsLoaded(stateDelegate, ISystemStateDelegate.class);
+    }
+    
+	private static <D extends ISystemDelegate> D ensureIsLoaded(final D systemDelegate, Class<D> c) {
+		String jmeSystemClassName = JmeSystem.class.getName();
+		D returnDelegate = systemDelegate;
+		
+		if (returnDelegate != null) {
+			return returnDelegate;
+		}
+		
+		try {
+			final SystemDelegateLoader<D> loader = new SystemDelegateLoader<D>();
+			
+			for (String delegateName : delegateNameLookupTable.get(c)) {
+				returnDelegate = loader.tryToLoad(delegateName);
+				if (returnDelegate != null) {
+					return returnDelegate;
+				}
+			}
+			
+			// None of the system delegates were found ...
+			Logger.getLogger(jmeSystemClassName).log(Level.SEVERE,
+				  "Failed to find a JmeSystem delegate!\n"
+				+ "Ensure either desktop or android jME3 jar is in the classpath.");
+		} catch (InstantiationException ex) {
+			Logger.getLogger(jmeSystemClassName).log(
+					Level.SEVERE, "Failed to create JmeSystem delegate:\n{0}", ex);
+		} catch (IllegalAccessException ex) {
+			Logger.getLogger(jmeSystemClassName).log(
+					Level.SEVERE, "Failed to create JmeSystem delegate:\n{0}", ex);
+		}
+		return null; // ... so return null
+	}
+}
+
+final class SystemDelegateLoader<T extends ISystemDelegate> {
     @SuppressWarnings("unchecked")
-    private static void checkDelegate() {
-        if (systemDelegate == null) {
-            try {
-                systemDelegate = tryLoadDelegate("com.jme3.system.JmeDesktopSystem");
-                if (systemDelegate == null) {
-                    systemDelegate = tryLoadDelegate("com.jme3.system.android.JmeAndroidSystem");
-                    if (systemDelegate == null) {
-                        // None of the system delegates were found ..
-                        Logger.getLogger(JmeSystem.class.getName()).log(Level.SEVERE,
-                                "Failed to find a JmeSystem delegate!\n"
-                                + "Ensure either desktop or android jME3 jar is in the classpath.");
-                    }
-                }
-            } catch (InstantiationException ex) {
-                Logger.getLogger(JmeSystem.class.getName()).log(Level.SEVERE, "Failed to create JmeSystem delegate:\n{0}", ex);
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(JmeSystem.class.getName()).log(Level.SEVERE, "Failed to create JmeSystem delegate:\n{0}", ex);
-            }
+	public T tryToLoad(String className) 
+			throws InstantiationException, IllegalAccessException {
+        try {
+            return (T) Class.forName(className).newInstance();
+        } catch (ClassNotFoundException ex) {
+            return null;
         }
     }
 }
