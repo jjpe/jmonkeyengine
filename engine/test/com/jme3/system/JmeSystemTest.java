@@ -18,6 +18,7 @@ import mockit.MockUp;
 import mockit.NonStrictExpectations;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.jme3.asset.AssetManager;
@@ -56,6 +57,13 @@ public class JmeSystemTest {
 			"com.jme3.system.DesktopSystemStateDelegate",
 			"com.jme3.system.android.AndroidSystemStateDelegate");
 	
+	@Before
+	public void uninitializeSystem() {
+		JmeSystem.setDelegate((ISystemDialogDelegate) null);
+		JmeSystem.setDelegate((ISystemFactoryDelegate) null);
+		JmeSystem.setDelegate((ISystemIODelegate) null);
+		JmeSystem.setDelegate((ISystemStateDelegate) null);
+	}
 	
 	/**
 	 * Checks if a JmeSystem with no delegate fails on its static, parameterless methods.
@@ -108,8 +116,7 @@ public class JmeSystemTest {
 			Platform getPlatform(){return null;}
 		};
 		Thread.currentThread().setContextClassLoader(androidLoader);
-		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"getPlatform");
+		JmeSystem.getPlatform();
 	}
 	
 	/**
@@ -124,8 +131,7 @@ public class JmeSystemTest {
 			File getStorageFolder(){return null;}
 		};
 		Thread.currentThread().setContextClassLoader(androidLoader);
-		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"getStorageFolder");
+		JmeSystem.getStorageFolder();
 	}
 	
 	/**
@@ -140,8 +146,7 @@ public class JmeSystemTest {
 			String getFullName(){return null;}
 		};
 		Thread.currentThread().setContextClassLoader(androidLoader);
-		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"getFullName");
+		JmeSystem.getFullName();
 	}
 	
 	/**
@@ -156,8 +161,7 @@ public class JmeSystemTest {
 			InputStream getResourceAsStream(String a){return null;}
 		};
 		Thread.currentThread().setContextClassLoader(androidLoader);
-		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"getResourceAsStream", new Class<?>[]{String.class}, new Object[]{null});
+		JmeSystem.getResourceAsStream(null);	
 	}
 	
 	/**
@@ -172,8 +176,7 @@ public class JmeSystemTest {
 			URL getResource(String a){return null;}
 		};
 		Thread.currentThread().setContextClassLoader(androidLoader);
-		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"getResource", new Class<?>[]{String.class}, new Object[]{null});
+		JmeSystem.getResource(null);
 	}
 	
 	/**
@@ -188,8 +191,7 @@ public class JmeSystemTest {
 			boolean trackDirectMemory(){return true;}
 		};
 		Thread.currentThread().setContextClassLoader(androidLoader);
-		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"trackDirectMemory");
+		JmeSystem.trackDirectMemory();
 	}
 
 	/**
@@ -204,8 +206,7 @@ public class JmeSystemTest {
 			void setLowPermissions(boolean a){}
 		};
 		Thread.currentThread().setContextClassLoader(androidLoader);
-		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"setLowPermissions",new Class<?>[]{boolean.class},new Object[]{true});
+		JmeSystem.setLowPermissions(false);
 	}
 	
 	/**
@@ -221,8 +222,7 @@ public class JmeSystemTest {
 			boolean isLowPermissions(){return true;}
 		};
 		Thread.currentThread().setContextClassLoader(androidLoader);
-		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"isLowPermissions");
+		JmeSystem.isLowPermissions();
 	}
 	
 	/**
@@ -238,8 +238,7 @@ public class JmeSystemTest {
 			void setSoftTextDialogInput(SoftTextDialogInput a){}
 		};
 		Thread.currentThread().setContextClassLoader(androidLoader);
-		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"setSoftTextDialogInput",new Class<?>[]{SoftTextDialogInput.class},new Object[]{null});
+		JmeSystem.setSoftTextDialogInput(null);
 	}
 	
 	/**
@@ -255,8 +254,7 @@ public class JmeSystemTest {
 			SoftTextDialogInput getSoftTextDialogInput(){return null;}
 		};
 		Thread.currentThread().setContextClassLoader(androidLoader);
-		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"getSoftTextDialogInput");
+		JmeSystem.getSoftTextDialogInput();
 	}
 	
 	/**
@@ -272,8 +270,7 @@ public class JmeSystemTest {
 			void writeImageFile(OutputStream a,String b,ByteBuffer c,int d,int e){}
 		};
 		Thread.currentThread().setContextClassLoader(androidLoader);
-		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"writeImageFile",new Class[]{OutputStream.class,String.class,ByteBuffer.class,int.class,int.class},new Object[]{null,null,null,0,0});
+		JmeSystem.writeImageFile(null, null, null, 0, 0);
 	}
 	
 	/**
@@ -289,8 +286,7 @@ public class JmeSystemTest {
 			AssetManager newAssetManager(URL a){return null;}
 		};
 		Thread.currentThread().setContextClassLoader(androidLoader);
-		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"newAssetManager",new Class[]{URL.class},new Object[]{null});
+		JmeSystem.newAssetManager(null);
 	}
 	
 	/**
@@ -306,8 +302,7 @@ public class JmeSystemTest {
 			AssetManager newAssetManager(){return null;}
 		};
 		Thread.currentThread().setContextClassLoader(androidLoader);
-		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"newAssetManager");
+		JmeSystem.newAssetManager();
 	}
 	
 	/**
@@ -323,8 +318,7 @@ public class JmeSystemTest {
 			boolean showSettingsDialog(AppSettings a, boolean b){return true;}
 		};
 		Thread.currentThread().setContextClassLoader(androidLoader);
-		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"showSettingsDialog",new Class[]{AppSettings.class,boolean.class},new Object[]{null,false});
+		JmeSystem.showSettingsDialog(null, false);
 	}
 	
 	/**
@@ -340,8 +334,7 @@ public class JmeSystemTest {
 			JmeContext newContext(AppSettings a, JmeContext.Type b){return null;}
 		};
 		Thread.currentThread().setContextClassLoader(androidLoader);
-		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"newContext",new Class[]{AppSettings.class,JmeContext.Type.class},new Object[]{null,JmeContext.Type.Canvas});
+		JmeSystem.newContext(null, null);
 	}
 	
 	/**
@@ -357,8 +350,7 @@ public class JmeSystemTest {
 			AudioRenderer newAudioRenderer(AppSettings a){return null;}
 		};
 		Thread.currentThread().setContextClassLoader(androidLoader);
-		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"newAudioRenderer",new Class[]{AppSettings.class},new Object[]{null});
+		JmeSystem.newAudioRenderer(null);
 	}
 	
 	/**
@@ -374,8 +366,7 @@ public class JmeSystemTest {
 			void initialize(AppSettings a){}
 		};
 		Thread.currentThread().setContextClassLoader(androidLoader);
-		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"initialize",new Class[]{AppSettings.class},new Object[]{null});
+		JmeSystem.initialize(null);
 	}
 	
 	/**
@@ -391,8 +382,7 @@ public class JmeSystemTest {
 			ImageRaster createImageRaster(Image a, int b){return null;}
 		};
 		Thread.currentThread().setContextClassLoader(androidLoader);
-		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"createImageRaster",new Class[]{Image.class,int.class},new Object[]{null,0});
+		JmeSystem.createImageRaster(null, 0);
 	}
 	
 	/**
@@ -408,23 +398,8 @@ public class JmeSystemTest {
 			void showErrorDialog(String a){}
 		};
 		Thread.currentThread().setContextClassLoader(androidLoader);
-		Class<?> system = androidLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"showErrorDialog",new Class[]{String.class},new Object[]{null});
+		JmeSystem.showErrorDialog(null);
 	}
-	
-	private void invokeStatic(
-			Class<?> system, 
-			String methodName ) throws Throwable {
-		invokeStatic(system, methodName, new Class[0], new Object[0]);
-	}
-	private void invokeStatic(
-			Class<?> system, 
-			String methodName, 
-			Class<?>[] paramClasses, 
-			Object[] params) throws Throwable {
-		system.getMethod(methodName, paramClasses).invoke(null, params);
-	}
-	
 	
 	/**
 	 * Checks if the Desktop delegate is implicitly loaded if it is the only
@@ -442,17 +417,9 @@ public class JmeSystemTest {
 			Platform getPlatform(){return null;}
 		};
 		Thread.currentThread().setContextClassLoader(desktopLoader);
-		Class<?> system = desktopLoader.customLoadClass(JmeSystem.class);
-		invokeStatic(system,"getPlatform");
+		JmeSystem.getPlatform();
 	}
 	
-	
-	private void uninitializeSystem() {
-		JmeSystem.setDelegate((ISystemDialogDelegate) null);
-		JmeSystem.setDelegate((ISystemFactoryDelegate) null);
-		JmeSystem.setDelegate((ISystemIODelegate) null);
-		JmeSystem.setDelegate((ISystemStateDelegate) null);
-	}
 	
 	/**
 	 * Tests if the initialize method tries to extract native libraries
@@ -460,7 +427,6 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testDesktopInitialize() {
-		uninitializeSystem();
 		final AppSettings emptySettings = new AppSettings(false);
 		new MockUp<Natives>(){
 			@SuppressWarnings("unused")
@@ -481,7 +447,6 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testDesktopInitializeWithIOException() {
-		uninitializeSystem();
 		new MockUp<Natives>(){
 			@SuppressWarnings("unused")
 			@Mock(invocations = 1)
@@ -500,7 +465,6 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testInitializeWithLowPermissions() {
-		uninitializeSystem();
 		new MockUp<Natives>(){
 			@SuppressWarnings("unused")
 			@Mock
@@ -519,7 +483,6 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void testDesktopInitializeTwice() {
-		uninitializeSystem();
 		new NoNativeExtraction();
 		Thread.currentThread().setContextClassLoader(desktopLoader);
 		JmeSystem.setLowPermissions(false);
@@ -532,7 +495,6 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void initializeAndroidWithZeroHandlersTest() {
-		uninitializeSystem();
 		new NonStrictExpectations() {
 			Logger mock;
 			Logger mock2;
@@ -559,7 +521,6 @@ public class JmeSystemTest {
 	 */
 	@Test
 	public void initializeTwiceTest() {
-		uninitializeSystem();
 		new NonStrictExpectations() {
 			Logger mock;
 			Logger mock2;
