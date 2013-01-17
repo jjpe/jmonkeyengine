@@ -46,24 +46,53 @@
 \newpage
 \pagenumbering{arabic}
 \section{Introduction}
-
+This report was made as part of a refactoring effort of the jMonkey game engine.
+The proposed refactoring and its motivation are deiscussed in Section~\ref{sec:refactoring}.
+Then the test suite of the system is discussed in Section~\ref{sec:testsuite}.
 
 \section{Refactoring}
+\label{sec:refactoring}
 We have chosen to refactor the JmeSystem, 
 because it's a good example of a S.O.L.I.D. SRP violation.
 This means it does too much and therefore its afferent coupling is higher than it has to be.
 The afferent coupling of JmeSystem is diplayed in Figure~\ref{fig:system-incoming}.
-Changes in the JmeSystem are therefore harder to make without breaking other code,
+The more classes depend on the JmeSystem, the harder it is to make changes to it without breaking other code,
 which is bad for maintainability.
 
-	The system itself uses a delegate, so the involved classes are JmeSystem, JmeSystemDelegate and JmeDesktopSystem from the com.jme3.system package, and JmeAndroidSystem from the com.jme3.system.android package.
+	With an afferent coupling of 21 reported by Sonar, 
+	the JmeSystem is not nearly as bad as the Material class (which has an afferent coupling of 193).
+	However, it is still a violation of the Single Responsibility Principle and might lead to problems.
+	We also don't have the resources to tackle the big problems like the Material class,
+	so we decided to focus on the JmeSystem.
 
-	We plan to write an extensive testsuite for these classes, which will be used to record their behaviour.
-	Then we will proceed to split the functionality in to smaller chunks with a more defined responsibility.
-	By introducing interfaces for each of these chunks, we will further increase extendability and reusability.
-	As these chunks can then be easily swapped and shared between different system types.
-	Our proposed decomposition of JmeSystem into parts with a single responsibility and the resulting decrease in afferent coupling
+	The system itself uses a delegate, so some of the coupling is actually implemented by JmeSystemDelegate,
+	and the rest is implemented by a subclass (JmeDesktopSystem from the com.jme3.system package or JmeAndroidSystem from the com.jme3.system.android package).
+
+	We plan to write extensive testsuites for these classes, which will be used to record their behaviour.
+	Then we will proceed to split the functionality into smaller chunks with a more defined responsibility.
+	We chose to decompose the JmeSystemDelegate into 4 components:
+	\begin{description}
+		\item[IO] This component is responsible for doing IO operations like reading resources and writing files.
+			Since the lowPermissions state of the system is really only used to determine what IO operations are allowed
+			(like extracting native libraries on the system or obtaining a storage folder) we decided to include them as well.
+			The subsystem contains the following methods: createImageRaster, writeImageFile, getResource, getResourceAsStream, getStorageFolder, setLowPermissions, isLowPermissions.
+		\item[Factory] This component is responsible for creating new objects. 
+		The actual implementation of the created objects may differ per system.
+		The subsystem contains the following methods: newAssetManager, newAudioRenderer, newContext.
+		\item[Dialog] The dialog component focusses on displaying dialogs (like a popup with an error message).
+		The type of dialogs to use obviously depend on the system.
+		This component contains the following methods: setSoftTextDialogInput, getSoftTextDialogInput, showSettingsDialog and showErrorDialog.
+		\item[State] This component can be used to obtain information about the system, like the platform it is running on and the name of the system.
+		It contains the following methods: getPlatform, getFullName and trackDirectMemory.
+	\end{description}
+
+	By introducing interfaces for each of these components, we will further increase extendability and reusability.
+	As these components can then be easily swapped and shared between different system types.
+	Our proposed decomposition of JmeSystemDelgate into parts with a single responsibility and the resulting decrease in afferent coupling for each delegate
 	can be seen in Figure~\ref{fig:system-decomposition}.
+	Although the afferent coupling of the JmeSystem will stay the same, 
+	the actual implementation will now be provided by the four components and their abstract parents (just like the JmeSystemDelegate),
+	instead of by a single delegate and its abstract parent, making the system more robust.
 
 \begin{figure}[!hb]
 \hspace*{-20mm}
@@ -97,26 +126,20 @@ which is bad for maintainability.
 \label{fig:system-state-incoming}
 \end{subfigure}
 
-\caption{The decomposition of JmeSystem. The afferent coupling is reduced to 9.}
+\caption{The decomposition of JmeSystemDelegate into 4 delegates. The maximum afferent coupling for a single delegate is reduced to 9.}
 \label{fig:system-decomposition}
 \end{figure}
 
 
 % \newpage
-\section{Feasibility}
-	With an afferent coupling of 21 reported by Sonar, 
-	it is not nearly as bad as the Material class (which has an afferent coupling 193).
-	However, due to the limited resources we have, refactoring the JmeSystem is actually the
-	better choice, as it's a clear violation but still feasible with our resources.
+\section{Testsuite}
+\label{sec:testsuite}
+The jmonkey unit test suite is very limited.
+It consists of a total of 12 unit tests and covers only 1.2\% of the jmonkey core source code.
+However, none of the classes we were planning to refactor were covered.
+This makes it even harder to change the JmeSystem or its delegates without breaking other code,
+as there is no way of checking to what extend the change altered the behaviour.
 
-% \newpage
-\section{Before}
-Before the start of our refactoring, there were only 12 unit tests.
-None of which covered the code we planned on refactoring.
-
-
-% \newpage
-\section{After}
 We have written 86 test cases in total for the classes JmeSystem, JmeSystemDelegate, JmeDesktopSystem and JmeAndroidSystem.
 Together with the 12 testcases that already existed, the testsuite has 98 tests (see Figure~\ref{fig:num-tests}).
 This figure shows that we have a single test case with an error.
@@ -128,7 +151,8 @@ Only JmeDesktopSystem was not covered properly at only 71\%.
 This was due to some missing classes in our project (the Jogl classes),
 making it impossible to fully test the class. 
 However, those non-covered parts (newContextJogl) are actually almost duplicates (supported by incode code duplicate findings) of pieces that are covered (newContextLwjgl).
-So we are still confident that our testsuite suffices.
+So we are still confident that our testsuite suffices for the refactorings we want to make.
+
 
 \begin{figure}[!hb]
 \includegraphics[width=\textwidth]{figures/86-new-tests.png}
@@ -138,7 +162,7 @@ So we are still confident that our testsuite suffices.
 
 \begin{figure}[!hb]
 \includegraphics[width=\textwidth]{figures/bug-in-delegate.png}
-\caption{The coverage indicates that the branch on matching "PowerPC" is not covered. The only call to is64 actually only passes lowercased strings.}
+\caption{The coverage indicates that the branch on matching "PowerPC" is not covered. The only call to is64 (shown at the bottom of this figure) actually only passes lowercased strings.}
 \label{fig:bug}
 \end{figure}
 
