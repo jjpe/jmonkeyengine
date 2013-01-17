@@ -15,7 +15,8 @@ import com.jme3.asset.AssetNotFoundException;
 public class DesktopSystemDialogDelegate extends AbstractSystemDialogDelegate {
 
 	@Override
-	public boolean showSettingsDialog(AppSettings sourceSettings, final boolean loadFromRegistry) {
+	public boolean showSettingsDialog(	AppSettings sourceSettings, 
+										final boolean loadFromRegistry) {
         if (SwingUtilities.isEventDispatchThread()) {
             throw new IllegalStateException("Cannot run from EDT");
         }
@@ -74,5 +75,4 @@ public class DesktopSystemDialogDelegate extends AbstractSystemDialogDelegate {
             }
         });
 	}
-
 }

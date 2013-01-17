@@ -9,5 +9,5 @@ package com.jme3.system;
  * @author Joey Ezechiels
  */
 public interface ISystemDelegate {
-
+	 public void initialize(AppSettings settings);
 }

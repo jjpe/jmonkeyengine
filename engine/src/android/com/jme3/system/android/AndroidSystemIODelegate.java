@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 
 import com.jme3.asset.AndroidImageInfo;
 import com.jme3.system.AbstractSystemIODelegate;
-import com.jme3.system.AppSettings;
 import com.jme3.texture.Image;
 import com.jme3.texture.image.DefaultImageRaster;
 import com.jme3.texture.image.ImageRaster;
@@ -51,11 +50,4 @@ public class AndroidSystemIODelegate extends AbstractSystemIODelegate {
         bitmapImage.compress(compressFormat, 95, outStream);
         bitmapImage.recycle();
     }
-
-	@Override
-	public void initialize(AppSettings settings) {
-		// TODO Auto-generated method stub
-
-	}
-
 }

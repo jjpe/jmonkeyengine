@@ -166,7 +166,10 @@ public class DesktopSystemFactoryDelegate implements ISystemFactoryDelegate {
 
     @Override
     public void initialize(AppSettings settings) {
-        if (initialized) return;
+        if (initialized) {
+        	return;
+        }
+        
         initialized = true;
         logger.log(Level.INFO, "Running on {0}", JmeSystem.getFullName());
         

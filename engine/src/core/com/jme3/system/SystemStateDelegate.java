@@ -51,4 +51,8 @@ public class SystemStateDelegate implements ISystemStateDelegate {
             throw new UnsupportedOperationException("The specified platform: " + os + " is not supported.");
         }
     }
+	
+	@Override
+	public void initialize(AppSettings settings) {
+	}
 }

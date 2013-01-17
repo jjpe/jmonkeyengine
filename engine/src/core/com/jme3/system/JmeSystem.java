@@ -55,9 +55,9 @@ public class JmeSystem {
     private static ISystemIODelegate ioDelegate = null;
     private static ISystemFactoryDelegate factoryDelegate = null;
     private static ISystemStateDelegate stateDelegate = null;
-	
-    private static final Map<Class<? extends ISystemDelegate>, List<String>> delegateNameLookupTable =
-    		createLookupMap();
+    
+    private static final Map<Class<? extends ISystemDelegate>, List<String>> 
+    	delegateNameLookupTable = createLookupMap();
 	
 	private static Map<Class<? extends ISystemDelegate>, List<String>> createLookupMap() {
 		Map<Class<? extends ISystemDelegate>, List<String>> map = 
@@ -214,6 +214,7 @@ public class JmeSystem {
         ioDelegate.initialize(settings);
         dialogDelegate.initialize(settings);
         factoryDelegate.initialize(settings);
+        stateDelegate.initialize(settings);
     }
     
     private static void ensureDelegatesAreLoaded() {
@@ -260,6 +261,13 @@ public class JmeSystem {
 	}
 }
 
+/**
+ * Loads {@link ISystemDelegate} instances from the file system.
+ * 
+ * @author Joey Ezechiels
+ *
+ * @param <T> The type of the delegate
+ */
 final class SystemDelegateLoader<T extends ISystemDelegate> {
     @SuppressWarnings("unchecked")
 	public T tryToLoad(String className) 
