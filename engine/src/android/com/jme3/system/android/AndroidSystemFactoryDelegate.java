@@ -1,4 +1,4 @@
-package com.jme3.system;
+package com.jme3.system.android;
 
 import java.net.URL;
 import java.util.logging.Handler;
@@ -11,9 +11,11 @@ import com.jme3.asset.AndroidAssetManager;
 import com.jme3.asset.AssetManager;
 import com.jme3.audio.AudioRenderer;
 import com.jme3.audio.android.AndroidAudioRenderer;
+import com.jme3.system.AppSettings;
+import com.jme3.system.ISystemFactoryDelegate;
+import com.jme3.system.JmeContext;
+import com.jme3.system.JmeSystem;
 import com.jme3.system.JmeContext.Type;
-import com.jme3.system.android.JmeAndroidSystem;
-import com.jme3.system.android.OGLESContext;
 import com.jme3.util.JmeFormatter;
 
 /**
@@ -21,10 +23,10 @@ import com.jme3.util.JmeFormatter;
  * 
  * @author Joey Ezechiels
  */
-public class AndroidFactoryDelegate implements ISystemFactoryDelegate {
+public class AndroidSystemFactoryDelegate implements ISystemFactoryDelegate {
     private static Activity activity;
     
-    protected final Logger logger = Logger.getLogger(AndroidFactoryDelegate.class.getName());
+    protected final Logger logger = Logger.getLogger(AndroidSystemFactoryDelegate.class.getName());
     protected boolean initialized = false;
 
 	@Override
@@ -53,11 +55,11 @@ public class AndroidFactoryDelegate implements ISystemFactoryDelegate {
 	}
 
     public static void setActivity(Activity activity) {
-        AndroidFactoryDelegate.activity = activity;
+        AndroidSystemFactoryDelegate.activity = activity;
     }
 
     public static Activity getActivity() {
-        return AndroidFactoryDelegate.activity;
+        return AndroidSystemFactoryDelegate.activity;
     }
 
 	@Override

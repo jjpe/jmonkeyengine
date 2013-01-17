@@ -16,10 +16,10 @@ import com.jme3.system.JmeContext.Type;
  * @author Volker Lanting
  * @author Joey Ezechiels
  */
-public class DesktopFactoryDelegate implements ISystemFactoryDelegate {
+public class DesktopSystemFactoryDelegate implements ISystemFactoryDelegate {
 
 	protected boolean initialized;
-	private Logger logger = Logger.getLogger(DesktopFactoryDelegate.class.getName());
+	private Logger logger = Logger.getLogger(DesktopSystemFactoryDelegate.class.getName());
 	
 	@Override
 	public JmeContext newContext(AppSettings settings, Type contextType) {

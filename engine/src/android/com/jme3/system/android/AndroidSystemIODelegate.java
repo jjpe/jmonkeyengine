@@ -1,4 +1,4 @@
-package com.jme3.system;
+package com.jme3.system.android;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -7,6 +7,8 @@ import java.nio.ByteBuffer;
 import android.graphics.Bitmap;
 
 import com.jme3.asset.AndroidImageInfo;
+import com.jme3.system.AbstractSystemIODelegate;
+import com.jme3.system.AppSettings;
 import com.jme3.texture.Image;
 import com.jme3.texture.image.DefaultImageRaster;
 import com.jme3.texture.image.ImageRaster;

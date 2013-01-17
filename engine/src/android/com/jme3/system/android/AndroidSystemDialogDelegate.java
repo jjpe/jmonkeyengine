@@ -1,9 +1,10 @@
-package com.jme3.system;
+package com.jme3.system.android;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 
-import com.jme3.system.android.JmeAndroidSystem;
+import com.jme3.system.AbstractSystemDialogDelegate;
+import com.jme3.system.AppSettings;
 
 public class AndroidSystemDialogDelegate extends AbstractSystemDialogDelegate {
 
