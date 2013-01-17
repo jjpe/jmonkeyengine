@@ -19,7 +19,7 @@ public class SystemStateDelegate implements ISystemStateDelegate {
             return true;
         } else if (arch.equals("x86_64")) {
             return true;
-        } else if (arch.equals("ppc") || arch.equals("PowerPC")) {
+        } else if (arch.equals("ppc") || arch.equals("powerpc")) {
             return false;
         } else if (arch.equals("ppc64")) {
             return true;
