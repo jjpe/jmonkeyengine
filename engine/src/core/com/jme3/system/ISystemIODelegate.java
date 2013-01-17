@@ -20,7 +20,7 @@ import com.jme3.util.Screenshots;
  * @author Volker Lanting
  *
  */
-public interface ISystemIODelegate {
+public interface ISystemIODelegate extends ISystemDelegate {
 
 	/**
 	 * Creates an {@link ImageRaster} from an image and a slice.

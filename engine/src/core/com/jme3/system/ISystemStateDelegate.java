@@ -6,7 +6,7 @@ package com.jme3.system;
  * @author Volker Lanting
  *
  */
-public interface ISystemStateDelegate {
+public interface ISystemStateDelegate extends ISystemDelegate {
 	/**
 	 * Returns only false at the moment.
 	 * @return false.

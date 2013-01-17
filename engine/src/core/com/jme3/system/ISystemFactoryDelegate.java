@@ -13,7 +13,7 @@ import com.jme3.system.JmeContext.Type;
  * @author Volker Lanting
  *
  */
-public interface ISystemFactoryDelegate {
+public interface ISystemFactoryDelegate extends ISystemDelegate {
 	/**
 	 * Creates a new {@link JmeContext} based on the Renderer in the settings
 	 * and the given context Type. 
