@@ -9,7 +9,7 @@ import com.jme3.input.SoftTextDialogInput;
  * @author Volker Lanting
  *
  */
-public interface ISystemDialogDelegate {
+public interface ISystemDialogDelegate extends ISystemDelegate {
 	/**
 	 * Displays a window to select AppSettings.
 	 * @param settings the settings. They will be updated with the settings the user chose.
