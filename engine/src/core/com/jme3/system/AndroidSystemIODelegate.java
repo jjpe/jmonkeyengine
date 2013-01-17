@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
 import com.jme3.texture.Image;
 import com.jme3.texture.image.ImageRaster;
 
-public class AndroidSystemIODelegate implements ISystemIODelegate {
+public class AndroidSystemIODelegate extends AbstractSystemIODelegate {
 
 	@Override
 	public ImageRaster createImageRaster(Image img, int slice) {

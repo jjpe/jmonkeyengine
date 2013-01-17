@@ -17,7 +17,7 @@ import com.jme3.texture.image.DefaultImageRaster;
 import com.jme3.texture.image.ImageRaster;
 import com.jme3.util.Screenshots;
 
-public class DesktopSystemIODelegate implements ISystemIODelegate {
+public class DesktopSystemIODelegate extends AbstractSystemIODelegate {
     protected final Logger logger = Logger.getLogger(DesktopSystemIODelegate.class.getName());
     protected boolean initialized = false;
     protected boolean isLowPermissions = false;
