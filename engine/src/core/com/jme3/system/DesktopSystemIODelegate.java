@@ -1,11 +1,8 @@
 package com.jme3.system;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,49 +17,12 @@ import com.jme3.util.Screenshots;
 public class DesktopSystemIODelegate extends AbstractSystemIODelegate {
     protected final Logger logger = Logger.getLogger(DesktopSystemIODelegate.class.getName());
     protected boolean initialized = false;
-    protected boolean isLowPermissions = false;
-    protected File storageFolder = null;
 
 	@Override
 	public ImageRaster createImageRaster(Image image, int slice) {
         assert image.getEfficentData() == null;
         return new DefaultImageRaster(image, slice);
 	}
-
-	@Override
-	public void setLowPermissions(boolean isLowPermissions) {
-		this.isLowPermissions = isLowPermissions;
-	}
-
-	@Override
-	public boolean isLowPermissions() {
-		return this.isLowPermissions;
-	}
-
-	@Override
-	public InputStream getResourceAsStream(String name) {
-        return this.getClass().getResourceAsStream(name);
-	}
-
-	@Override
-	public URL getResource(String name) {
-        return this.getClass().getResource(name);
-	}
-
-	@Override
-	public synchronized File getStorageFolder() {
-        if (isLowPermissions) {
-            throw new UnsupportedOperationException("File system access restricted");
-        }
-        if (storageFolder == null) {
-            // Initialize storage folder
-            storageFolder = new File(System.getProperty("user.home"), ".jme3");
-            if (!storageFolder.exists()) {
-                storageFolder.mkdir();
-            }
-        }
-        return storageFolder;
-    }
 
 	@Override
 	public void writeImageFile(	OutputStream outStream, 
@@ -83,7 +43,7 @@ public class DesktopSystemIODelegate extends AbstractSystemIODelegate {
 
         initialized = true;
         try {
-            if (!isLowPermissions) {
+            if (!lowPermissions) {
                 // can only modify logging settings
                 // if permissions are available
 //                JmeFormatter formatter = new JmeFormatter();
@@ -102,7 +62,7 @@ public class DesktopSystemIODelegate extends AbstractSystemIODelegate {
         }
         logger.log(Level.INFO, "Running on {0}", JmeSystem.getFullName());
 
-        if (!isLowPermissions) {
+        if (!lowPermissions) {
             try {
                 Natives.extractNativeLibs(JmeSystem.getPlatform(), settings);
             } catch (IOException ex) {
