@@ -1,7 +1,6 @@
 .DS_Store
 
 engine/.classpath
-engine/.project
 engine/bin
 
 report/.DS_Store
